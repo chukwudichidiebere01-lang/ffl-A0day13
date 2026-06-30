@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Fast French Lab · Jour 13 · À la Gare</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Lato:wght@400;700;900&family=Cardo:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#FBF7F3;--bg2:#FFFFFF;--bg3:#F4EDE4;--bg4:#E8D9C8;
+  --br1:#3A1F0E;--br2:#6B3A2A;--br3:#9B5A30;--br4:#C4935A;--br5:#E8D0B0;
+  --brb:rgba(107,58,42,.13);--brb2:rgba(107,58,42,.07);
+  --gl:#B8920A;--glb:rgba(184,146,10,.13);--glb2:rgba(184,146,10,.07);
+  --gn:#1A7A50;--gnb:rgba(26,122,80,.12);--gnb2:rgba(26,122,80,.06);
+  --rd:#B53A2A;--rdb:rgba(181,58,42,.1);
+  --pu:#6B2FA0;--pub:rgba(107,47,160,.1);
+  --txt:#1A0A04;--txt2:#3A200E;--mut:#7A5A48;
+  --bdr:rgba(107,58,42,.22);--bdr2:rgba(107,58,42,.14);
+  --sh:0 4px 22px rgba(58,31,14,.12);--sh2:0 2px 10px rgba(0,0,0,.05);
+  --r:16px;--rsm:10px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Lato',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;font-size:16px;overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Cinzel',serif;letter-spacing:.5px}
+.fr{font-family:'Cardo',serif}
+
+/* WELCOME */
+#wModal{position:fixed;inset:0;z-index:3000;background:linear-gradient(135deg,#F4EDE4 0%,#E8D9C8 50%,#FBF7F3 100%);display:flex;align-items:center;justify-content:center;padding:14px;overflow-y:auto}
+.wCard{background:var(--bg2);border-radius:22px;padding:28px 22px 24px;max-width:420px;width:100%;box-shadow:0 24px 60px rgba(58,31,14,.2);border:1.5px solid var(--bdr2)}
+.wBadge{display:inline-flex;align-items:center;gap:4px;background:var(--brb);color:var(--br2);border:1px solid rgba(107,58,42,.3);border-radius:50px;padding:3px 13px;font-size:.61rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;font-family:'Cinzel',serif;margin-bottom:9px}
+.wLogo{font-family:'Cinzel',serif;font-weight:800;font-size:1rem;letter-spacing:2px;text-align:center;color:var(--txt)}.wLogo em{color:var(--br2);font-style:normal}
+.wSub{font-size:.77rem;color:var(--mut);text-align:center;margin-bottom:16px;line-height:1.65}
+.wFg{margin-bottom:11px}.wFg label{display:block;font-size:.69rem;font-weight:700;margin-bottom:4px;color:var(--txt2);text-transform:uppercase;letter-spacing:.7px}
+.wFg input{width:100%;padding:11px 13px;background:var(--bg3);border:1.5px solid var(--bdr2);border-radius:10px;font-size:.9rem;outline:none;color:var(--txt);font-family:'Lato',sans-serif;transition:border-color .2s}
+.wFg input:focus{border-color:var(--br2)}.wFg input.werr{border-color:var(--rd)}
+.wErr{font-size:.69rem;color:var(--rd);margin-top:3px;display:none;font-weight:700}
+.moodRow{display:flex;gap:6px;justify-content:center;margin:6px 0 3px}
+.moodBtn{font-size:1.4rem;padding:7px;border:2px solid var(--bdr2);border-radius:9px;background:var(--bg3);cursor:pointer;transition:all .18s;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center}
+.moodBtn.sel{border-color:var(--br2);background:var(--brb);transform:scale(1.1)}
+.wBtn{width:100%;padding:14px;background:linear-gradient(135deg,var(--br2),var(--br1));color:#fff;border:none;border-radius:50px;font-family:'Cinzel',serif;font-size:.9rem;font-weight:700;cursor:pointer;margin-top:9px;letter-spacing:.5px;transition:opacity .2s;box-shadow:0 5px 22px rgba(107,58,42,.4)}
+.wBtn:hover{opacity:.88}
+
+/* HEADER */
+.hdr{background:rgba(251,247,243,.96);border-bottom:1px solid var(--bdr2);padding:10px 15px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;backdrop-filter:blur(14px)}
+.logo{font-family:'Cinzel',serif;font-weight:800;font-size:.82rem;letter-spacing:2px;color:var(--txt)}.logo em{color:var(--br2);font-style:normal}
+.dayPill{background:linear-gradient(135deg,var(--br2),var(--br1));color:#fff;border-radius:50px;padding:4px 14px;font-size:.7rem;font-weight:700;font-family:'Cinzel',serif;letter-spacing:.5px}
+
+/* PROGRESS */
+.progWrap{padding:6px 14px 5px;background:rgba(251,247,243,.95);border-bottom:1px solid var(--bdr2)}
+.progSegs{display:flex;gap:3px}.pSeg{flex:1;height:4px;border-radius:99px;background:var(--bdr2);transition:background .4s}
+.pSeg.done{background:var(--br2)}.pSeg.active{background:var(--br4)}
+.progLbl{display:flex;justify-content:space-between;font-size:.51rem;color:var(--mut);margin-top:3px}
+
+/* LAYOUT */
+.wrap{max-width:700px;margin:0 auto;padding:14px 12px 130px}
+.dots{display:flex;gap:5px;justify-content:center;margin-bottom:16px;flex-wrap:wrap}
+.dot{width:32px;height:32px;border-radius:50%;background:var(--bg3);color:var(--mut);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;cursor:pointer;transition:all .22s;border:2px solid var(--bdr2)}
+.dot.active{background:var(--br2);color:#fff;border-color:var(--br2)}.dot.done{background:var(--brb);color:var(--br2);border-color:var(--br2)}
+.sec{display:none}.sec.show{display:block;animation:sUp .32s ease}
+@keyframes sUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* CARDS */
+.card{background:var(--bg2);border-radius:var(--r);padding:18px;margin-bottom:14px;border:1px solid var(--bdr2);box-shadow:var(--sh)}
+.cardHdr{display:flex;align-items:center;gap:11px;padding-bottom:13px;border-bottom:1px solid var(--bdr2);margin-bottom:15px}
+.cardIco{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.icoB{background:var(--brb);border:1px solid var(--bdr2)}.icoG{background:var(--glb);border:1px solid rgba(184,146,10,.25)}.icoPu{background:var(--pub);border:1px solid rgba(107,47,160,.2)}.icoGn{background:var(--gnb);border:1px solid rgba(26,122,80,.22)}
+.cardTitle{font-size:.96rem;font-weight:700;color:var(--txt);font-family:'Cinzel',serif}.cardSub{font-size:.69rem;color:var(--mut);margin-top:2px}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;border-radius:50px;padding:3px 12px;font-size:.61rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:11px;font-family:'Cinzel',serif}
+.bBr{background:var(--brb);color:var(--br2);border:1px solid rgba(107,58,42,.28)}
+.bGl{background:var(--glb);color:var(--gl);border:1px solid rgba(184,146,10,.28)}
+.bGn{background:var(--gnb);color:var(--gn);border:1px solid rgba(26,122,80,.28)}
+.bPu{background:var(--pub);color:var(--pu);border:1px solid rgba(107,47,160,.25)}
+.bRd{background:var(--rdb);color:var(--rd);border:1px solid rgba(181,58,42,.25)}
+
+/* BANNERS */
+.tcf{background:linear-gradient(135deg,#FFFCEE,#FFF8DC);border:1px solid rgba(184,146,10,.3);border-radius:var(--rsm);padding:9px 13px;margin-bottom:13px;font-size:.78rem;color:#6B5000;line-height:1.65;font-weight:600}
+.coach{background:linear-gradient(135deg,#F7F2EC,#F0E8DC);border:1.5px solid var(--bdr2);border-radius:var(--r);padding:14px;margin-bottom:13px;display:flex;gap:11px;align-items:flex-start}
+.coachAv{font-size:1.9rem;flex-shrink:0;margin-top:1px}
+.coachName{font-size:.59rem;font-weight:700;color:var(--br2);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:3px;font-family:'Cinzel',serif}
+.coachTxt{font-size:.82rem;color:var(--txt2);line-height:1.65}.coachTxt strong{color:var(--txt)}
+.infoBox{background:var(--bg3);border:1px solid var(--bdr2);border-radius:var(--rsm);padding:9px 12px;margin-bottom:12px;font-size:.8rem;color:var(--mut);line-height:1.6}.infoBox strong{color:var(--txt)}
+
+/* ANNOUNCEMENT BOARD STYLE */
+.announceBoard{background:linear-gradient(160deg,#1A0A04,#2A120A);border-radius:var(--r);padding:18px;margin-bottom:14px;border:2px solid rgba(196,147,90,.3);box-shadow:0 6px 30px rgba(58,31,14,.4)}
+.announceLbl{font-family:'Cinzel',serif;font-size:.62rem;font-weight:700;color:var(--br4);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;text-align:center}
+.announceText{font-family:'Cardo',serif;font-size:.92rem;color:#F5E8D0;line-height:2.0;padding:13px;background:rgba(255,255,255,.05);border-radius:var(--rsm);border-left:3px solid var(--br4)}
+.announceText strong{color:var(--br4)}
+.announceEn{font-size:.74rem;color:rgba(197,160,110,.7);filter:blur(3.5px);transition:filter .25s;margin-top:7px;line-height:1.6;cursor:pointer;font-style:italic}
+.announceEn.rev{filter:none}
+
+/* VOCAB CARDS */
+.vcGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:13px}
+@media(max-width:430px){.vcGrid{grid-template-columns:repeat(2,1fr)}}
+.vcCard{background:var(--bg2);border:1.5px solid var(--bdr2);border-radius:12px;padding:12px 8px;text-align:center;cursor:pointer;transition:all .2s;box-shadow:var(--sh2)}
+.vcCard:hover,.vcCard:active{border-color:var(--br2);background:var(--brb);transform:translateY(-2px);box-shadow:var(--sh)}
+.vcEmo{font-size:1.7rem;display:block;margin-bottom:4px}
+.vcFr{font-size:.76rem;font-weight:700;color:var(--br2);line-height:1.3;display:block;margin-bottom:2px;font-family:'Cinzel',serif}
+.vcEn{font-size:.63rem;color:var(--mut);display:block;filter:blur(3.5px);transition:filter .25s;cursor:pointer}.vcEn.rev{filter:none}
+.vcIpa{font-size:.59rem;color:rgba(107,58,42,.5);display:block;margin-top:1px}
+
+/* CHUNK CARDS */
+.chunkBox{background:linear-gradient(135deg,#F7F2EC,#EFE5D8);border:1.5px solid var(--bdr2);border-radius:var(--r);padding:14px;margin-bottom:10px;box-shadow:var(--sh2)}
+.chunkFr{font-size:.97rem;font-weight:700;color:var(--br1);font-family:'Cardo',serif;line-height:1.5;margin-bottom:4px}
+.chunkEn{font-size:.73rem;color:var(--mut);filter:blur(3.5px);transition:filter .25s;cursor:pointer;margin-bottom:7px}.chunkEn.rev{filter:none}
+.chunkEx{font-size:.78rem;color:var(--txt2);font-style:italic;line-height:1.55;display:none;font-family:'Cardo',serif}
+
+/* NUMBERS */
+.numGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-bottom:13px}
+@media(max-width:440px){.numGrid{grid-template-columns:1fr}}
+.numCard{background:var(--bg2);border:1.5px solid var(--bdr2);border-radius:var(--rsm);padding:12px;display:flex;gap:11px;align-items:center;box-shadow:var(--sh2);cursor:pointer;transition:all .2s}
+.numCard:hover{border-color:var(--br2);background:var(--brb)}
+.numN{font-family:'Cinzel',serif;font-size:1.6rem;font-weight:800;color:var(--br2);min-width:55px;text-align:right;line-height:1}
+.numFr{font-size:.88rem;font-weight:700;color:var(--txt);font-family:'Cardo',serif;line-height:1.4}
+.numNote{font-size:.68rem;color:var(--br3);margin-top:2px;line-height:1.4}
+.numEn{font-size:.67rem;color:var(--mut);filter:blur(3.5px);transition:filter .25s}.numEn.rev{filter:none}
+
+/* DIALOGUE BOXES */
+.dlgBox{background:var(--bg3);border:1px solid var(--bdr2);border-radius:var(--rsm);padding:12px;margin-bottom:8px}
+.dlgSpk{font-size:.59rem;font-weight:700;color:var(--br2);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;font-family:'Cinzel',serif}
+.dlgFr{font-size:.88rem;color:var(--txt);font-family:'Cardo',serif;line-height:1.65;margin-bottom:4px}
+.dlgEn{font-size:.73rem;color:var(--mut);filter:blur(3.5px);transition:filter .25s;cursor:pointer;line-height:1.5;font-style:italic}.dlgEn.rev{filter:none}
+.revBtnSm{font-size:.64rem;color:var(--br3);cursor:pointer;font-weight:700;display:inline-block;margin-top:3px;background:none;border:none;padding:0;font-family:'Lato',sans-serif}
+
+/* BEST RESPONSE */
+.brQ{background:linear-gradient(135deg,#3A1F0E,#5C2E14);border-radius:var(--r);padding:16px;margin-bottom:13px;color:#F5E8D0;font-family:'Cardo',serif}
+.brQlbl{font-size:.6rem;font-weight:700;color:var(--br4);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;font-family:'Cinzel',serif}
+.brQtxt{font-size:.97rem;line-height:1.65;margin-bottom:8px}
+.brQhint{font-size:.72rem;color:rgba(230,200,150,.6);filter:blur(3px);cursor:pointer;transition:filter .25s;font-style:italic}.brQhint.rev{filter:none;color:rgba(230,200,150,.85)}
+.brOpt{border:1.5px solid var(--bdr2);border-radius:10px;padding:11px 13px;margin-bottom:7px;cursor:pointer;font-size:.85rem;transition:all .18s;min-height:44px;display:flex;align-items:center;gap:9px;background:var(--bg3);color:var(--txt);font-family:'Cardo',serif}
+.brOpt:hover{border-color:var(--br2);background:var(--brb)}
+.brOpt.co{border-color:var(--gn)!important;background:var(--gnb)!important;color:var(--gn);font-weight:700}
+.brOpt.wo{border-color:var(--rd)!important;background:var(--rdb)!important;color:var(--rd);font-weight:700}
+.brOpt.dis{pointer-events:none}
+.brFb{font-size:.77rem;margin-top:7px;padding:9px 12px;border-radius:9px;display:none;font-weight:600;line-height:1.55;color:var(--txt)}.brFb.show{display:block}
+
+/* MCQ */
+.mcqW{background:var(--bg2);border:1.5px solid var(--bdr2);border-radius:var(--r);padding:13px;margin-bottom:11px;box-shadow:var(--sh2)}
+.mcqFrQ{font-size:.9rem;font-weight:700;color:var(--txt);font-family:'Cardo',serif;line-height:1.55;margin-bottom:2px}
+.mcqEnQ{font-size:.71rem;color:var(--mut);font-style:italic;margin-bottom:8px}
+.mcqQ{font-size:.87rem;font-weight:600;color:var(--txt);margin-bottom:9px;line-height:1.5}
+.mcqO{border:1.5px solid var(--bdr2);border-radius:10px;padding:10px 12px;margin-bottom:6px;cursor:pointer;font-size:.83rem;transition:all .18s;min-height:44px;display:flex;align-items:center;gap:8px;color:var(--txt);background:var(--bg3)}
+.mcqO:hover{border-color:var(--br2);background:var(--brb)}.mcqO.co{border-color:var(--gn)!important;background:var(--gnb)!important;color:var(--gn);font-weight:700}
+.mcqO.wo{border-color:var(--rd)!important;background:var(--rdb)!important;color:var(--rd);font-weight:700}.mcqO.dis{pointer-events:none}
+.mcqFb{font-size:.76rem;margin-top:6px;padding:8px 11px;border-radius:8px;display:none;font-weight:600;line-height:1.55}.mcqFb.show{display:block}
+
+/* VOCAB FLOATERS */
+.vf{cursor:pointer;color:var(--br2);font-weight:700;border-bottom:1.5px dashed rgba(107,58,42,.4);position:relative}
+.vfT{display:none;position:absolute;bottom:130%;left:50%;transform:translateX(-50%);background:var(--bg2);border:1.5px solid var(--bdr2);border-radius:var(--rsm);padding:9px 12px;min-width:190px;font-size:.74rem;z-index:999;box-shadow:var(--sh);line-height:1.6;font-style:normal;color:var(--txt);white-space:normal}
+.vfT::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--bg2)}
+.vf:hover .vfT,.vf:focus .vfT{display:block}
+.vfEn{font-weight:700;color:var(--br2)}.vfIpa{color:var(--mut);font-size:.68rem}.vfEx{margin-top:3px;font-style:italic;color:var(--mut);font-size:.71rem}
+
+/* INPUTS */
+.txInp{width:100%;background:var(--bg3);border:1.5px solid var(--bdr2);border-radius:var(--rsm);padding:10px 12px;font-size:.88rem;font-family:'Lato',sans-serif;outline:none;transition:border-color .2s;color:var(--txt);resize:vertical;line-height:1.6}
+.txInp:focus{border-color:var(--br2)}.txInp.ok{border-color:var(--gn)}.txInp.bad{border-color:var(--rd)}.txInp::placeholder{color:var(--mut)}
+.flInp{background:var(--bg3);border:1.5px solid var(--bdr2);border-radius:6px;padding:5px 10px;font-size:.85rem;font-family:'Lato',sans-serif;outline:none;min-width:90px;min-height:34px;vertical-align:middle;color:var(--txt);transition:border-color .2s}
+.flInp:focus{border-color:var(--br2)}.flInp.ok{border-color:var(--gn);background:var(--gnb2)}.flInp.bad{border-color:var(--rd);background:var(--rdb)}.flInp::placeholder{color:var(--mut)}
+
+/* DICTATION */
+.dictItem{background:var(--bg2);border:1.5px solid var(--bdr2);border-radius:var(--r);padding:14px;margin-bottom:11px;box-shadow:var(--sh2)}
+.dictLvl{font-size:.59rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:7px;color:var(--br2);font-family:'Cinzel',serif}
+.dictInp{width:100%;background:var(--bg);border:1.5px solid var(--bdr2);border-radius:var(--rsm);padding:9px 12px;font-size:.88rem;font-family:'Cardo',serif;outline:none;color:var(--txt);transition:border-color .2s}
+.dictInp:focus{border-color:var(--br2)}.dictInp.ok{border-color:var(--gn);background:var(--gnb2)}.dictInp.bad{border-color:var(--rd)}
+.dictInp::placeholder{color:var(--mut)}
+.dictFb{font-size:.78rem;margin-top:6px;padding:7px 11px;border-radius:8px;display:none;font-weight:600;line-height:1.55}.dictFb.show{display:block}
+.dictReveal{background:var(--glb2);border:1px solid rgba(184,146,10,.22);border-radius:var(--rsm);padding:8px 12px;margin-top:7px;display:none;font-size:.84rem;font-family:'Cardo',serif;color:var(--txt)}.dictReveal.show{display:block}
+
+/* AUDIO EXTRACT */
+.extractBox{background:linear-gradient(160deg,#2A120A,#1A0A04);border-radius:var(--r);padding:18px;margin-bottom:14px;border:2px solid rgba(196,147,90,.25)}
+.extractLbl{font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;color:var(--br4);text-transform:uppercase;letter-spacing:2px;margin-bottom:10px}
+.extractWave{display:flex;align-items:center;gap:3px;margin:10px 0;height:40px}
+.wave-bar{width:4px;background:var(--br4);border-radius:99px;animation:wave 1s ease-in-out infinite;opacity:.6}
+@keyframes wave{0%,100%{height:8px;opacity:.4}50%{height:32px;opacity:1}}
+.transcriptBox{background:var(--bg3);border:1.5px solid var(--bdr2);border-radius:var(--rsm);padding:13px;margin-top:11px;display:none}
+.transcriptBox.show{display:block}
+.transcriptLbl{font-size:.59rem;font-weight:700;color:var(--br2);text-transform:uppercase;letter-spacing:1px;margin-bottom:7px;font-family:'Cinzel',serif}
+.transcriptTxt{font-size:.85rem;color:var(--txt);font-family:'Cardo',serif;line-height:2.0}
+
+/* SIMULATOR */
+.simCard{background:linear-gradient(135deg,var(--bg3),var(--bg4));border:2px solid var(--bdr);border-radius:var(--r);padding:20px;margin-bottom:14px;box-shadow:var(--sh)}
+.simQFr{font-size:1rem;font-weight:700;color:var(--txt);font-family:'Cardo',serif;line-height:1.55;margin-bottom:12px}
+.sttBox{background:var(--bg2);border:1.5px solid var(--bdr2);border-radius:var(--rsm);padding:10px 13px;margin-top:8px;display:none;font-size:.82rem;color:var(--txt2);line-height:1.6;font-style:italic;min-height:40px}
+.sttBox.show{display:block}
+
+/* STARTERS */
+.starterChips{display:flex;flex-wrap:wrap;gap:6px;margin:9px 0}
+.starterC{background:var(--brb);border:1px solid rgba(107,58,42,.25);border-radius:50px;padding:5px 11px;font-size:.73rem;cursor:pointer;color:var(--br2);font-weight:600;transition:all .18s;font-family:'Cardo',serif}
+.starterC:hover{background:var(--br2);color:#fff}
+
+/* BUTTONS */
+.bBr_{background:linear-gradient(135deg,var(--br2),var(--br1));color:#fff;border:none;border-radius:50px;min-height:42px;padding:0 18px;font-size:.8rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .18s;font-family:'Lato',sans-serif;box-shadow:0 3px 14px rgba(107,58,42,.3)}
+.bBr_:hover{opacity:.87;transform:translateY(-1px)}
+.bGl_{background:linear-gradient(135deg,var(--gl),#7A6000);color:#fff;border:none;border-radius:50px;min-height:40px;padding:0 16px;font-size:.78rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-family:'Lato',sans-serif}
+.bGn_{background:linear-gradient(135deg,var(--gn),#156B45);color:#fff;border:none;border-radius:50px;min-height:42px;padding:0 18px;font-size:.8rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-family:'Lato',sans-serif}
+.bOut{background:transparent;color:var(--br2);border:1.5px solid rgba(107,58,42,.4);border-radius:50px;min-height:40px;padding:0 15px;font-size:.77rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .18s;font-family:'Lato',sans-serif}
+.bOut:hover{background:var(--brb)}
+.bRec{background:linear-gradient(135deg,#B33A2A,#8A2718);color:#fff;border:none;border-radius:50px;min-height:42px;padding:0 16px;font-size:.77rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .18s;font-family:'Lato',sans-serif}
+.bRec.on{animation:rp 1.1s infinite}
+@keyframes rp{0%,100%{box-shadow:0 0 0 0 rgba(179,58,42,.5)}50%{box-shadow:0 0 0 10px rgba(179,58,42,0)}}
+.bStt{background:linear-gradient(135deg,var(--br2),var(--br1));color:#fff;border:none;border-radius:50px;min-height:42px;padding:0 16px;font-size:.77rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-family:'Lato',sans-serif}
+.bStt.on{animation:sttP 1s infinite;background:linear-gradient(135deg,#B33A2A,#8A2718)}
+@keyframes sttP{0%,100%{box-shadow:0 0 0 0 rgba(179,58,42,.5)}50%{box-shadow:0 0 0 10px rgba(179,58,42,0)}}
+.bPb{background:linear-gradient(135deg,var(--br2),var(--br1));color:#fff;border:none;border-radius:50px;min-height:40px;padding:0 14px;font-size:.77rem;font-weight:700;cursor:pointer;display:none;align-items:center;gap:5px;font-family:'Lato',sans-serif}
+.bPb.show{display:inline-flex}
+.redoB{background:var(--bg3);color:var(--mut);border:1px solid var(--bdr2);border-radius:50px;padding:7px 14px;font-size:.71rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:all .18s}
+.redoB:hover{border-color:var(--br2);color:var(--br2)}
+.audRow{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px;align-items:center}
+.navBar{display:flex;justify-content:space-between;margin-top:20px;gap:10px}
+.bNxt{background:linear-gradient(135deg,var(--br2),var(--br1));color:#fff;border:none;border-radius:50px;min-height:50px;padding:0 28px;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:'Cinzel',serif;box-shadow:0 5px 22px rgba(107,58,42,.35);letter-spacing:.5px}
+.bNxt:hover{transform:translateY(-2px)}
+.bPrv{background:var(--bg2);color:var(--txt2);border:1.5px solid var(--bdr2);border-radius:50px;min-height:48px;padding:0 20px;font-size:.83rem;font-weight:600;cursor:pointer;transition:all .18s}
+.bPrv:hover{border-color:var(--br2);color:var(--br2)}
+
+/* SCORES & GATES */
+.scoreBox{background:var(--gnb);border:1.5px solid var(--gn);border-radius:var(--rsm);padding:13px;text-align:center;display:none;margin-top:10px}
+.scoreBox.show{display:block}.scoreN{font-size:1.9rem;font-weight:900;color:var(--gn);font-family:'Cinzel',serif}
+.gate{background:rgba(181,58,42,.07);border:1.5px solid var(--rd);border-radius:var(--r);padding:13px;text-align:center;display:none;margin-top:10px}
+.gate.show{display:block}.gate p{color:var(--rd);font-weight:600;margin-bottom:9px;font-size:.83rem;line-height:1.5}
+.coachFb{background:linear-gradient(135deg,#F7F2EC,#F0E8DC);border:1.5px solid var(--bdr2);border-radius:var(--r);padding:14px;margin-top:12px;display:none}
+.coachFb.show{display:block}.cfbLbl{font-size:.59rem;font-weight:700;color:var(--br2);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:6px;font-family:'Cinzel',serif}
+.cfbTxt{font-size:.83rem;color:var(--txt2);line-height:1.7}.cfbLoad{text-align:center;color:var(--mut);font-size:.82rem;padding:8px}
+
+/* TIMER */
+#tdDisp{font-size:2.3rem;font-weight:700;color:var(--br2);font-family:'Cinzel',serif;text-align:center;margin:8px 0}
+#tdDisp.urgent{color:var(--rd);animation:pulse .5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.wcD{font-size:.69rem;color:var(--mut);text-align:right;margin-top:4px}
+
+/* SS BOX */
+.ssBox{background:linear-gradient(135deg,#FFFCF0,#FFF8EE);border:2px solid rgba(184,146,10,.3);border-radius:var(--r);padding:16px;margin-top:13px;display:none}
+.ssBox.show{display:block}
+.ssTtl{font-size:.59rem;font-weight:700;color:var(--gl);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;font-family:'Cinzel',serif}
+.ssW{font-size:.84rem;color:var(--txt);line-height:1.9;font-family:'Cardo',serif;text-align:left;margin-bottom:10px}
+.ssRem{font-size:.7rem;color:var(--gl);font-weight:600;background:var(--glb);padding:8px 12px;border-radius:var(--rsm)}
+
+/* CONFETTI, FLOAT, COMPLETION */
+.cfB{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;display:none}
+.cf{position:absolute;width:7px;height:7px;border-radius:2px;animation:fall 2.2s ease forwards}
+@keyframes fall{0%{opacity:1;transform:translateY(-10px) rotate(0deg)}100%{opacity:0;transform:translateY(100vh) rotate(720deg)}}
+#compSc{display:none;padding:2rem 1rem 6rem;max-width:480px;margin:0 auto;text-align:center}
+#compSc.show{display:block;animation:sUp .4s ease}
+.stGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:1rem 0}
+.stCard{background:var(--bg2);border:1.5px solid var(--bdr2);border-radius:var(--r);padding:13px;text-align:center;box-shadow:var(--sh2)}
+.stV{font-size:1.4rem;font-weight:900;color:var(--br2);font-family:'Cinzel',serif}.stL{font-size:.69rem;color:var(--mut);margin-top:2px}
+#toast{position:fixed;top:68px;left:50%;transform:translateX(-50%);z-index:600;background:var(--bg2);border:1.5px solid var(--bdr2);border-radius:50px;padding:8px 18px;font-size:.75rem;font-weight:700;color:var(--txt);box-shadow:var(--sh);display:none;white-space:nowrap;max-width:90vw}
+.cfloat{position:fixed;bottom:13px;right:13px;z-index:500;display:flex;flex-direction:column;align-items:flex-end}
+.cbubble{background:var(--bg2);border-radius:14px;border:1.5px solid var(--bdr2);padding:10px 13px;max-width:215px;margin-bottom:8px;box-shadow:var(--sh);font-size:.76rem;color:var(--txt2);line-height:1.55;display:none}
+.cbubble.show{display:block;animation:sUp .28s ease}
+.cbName{font-size:.58rem;font-weight:700;color:var(--br2);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;font-family:'Cinzel',serif}
+.cav{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--br2),var(--br1));border:3px solid var(--bg2);display:flex;align-items:center;justify-content:center;font-size:1.35rem;cursor:pointer;animation:flt 3s ease-in-out infinite;box-shadow:0 4px 18px rgba(107,58,42,.4)}
+@keyframes flt{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+#dictFab{position:fixed;bottom:72px;right:13px;z-index:400;width:44px;height:44px;border-radius:50%;background:var(--bg2);color:var(--br2);border:1.5px solid var(--bdr2);font-size:1.05rem;cursor:pointer;box-shadow:var(--sh);display:none;align-items:center;justify-content:center;transition:all .18s}
+#dictFab:hover{border-color:var(--br2);transform:scale(1.08)}
+#dictP{position:fixed;bottom:0;left:0;right:0;z-index:600;background:var(--bg2);border-radius:22px 22px 0 0;padding:17px 15px 28px;box-shadow:0 -8px 36px rgba(107,58,42,.15);transform:translateY(100%);transition:transform .3s;max-height:72vh;overflow-y:auto;border-top:1.5px solid var(--bdr2)}
+#dictP.open{transform:translateY(0)}
+.dpH{width:34px;height:3px;background:var(--bdr2);border-radius:99px;margin:0 auto 13px}
+.dpRow{display:flex;gap:7px;margin:10px 0}
+#dpW{flex:1;padding:9px 12px;background:var(--bg3);border:1.5px solid var(--bdr2);border-radius:50px;font-size:.86rem;outline:none;color:var(--txt);font-family:'Lato',sans-serif}
+#dpW:focus{border-color:var(--br2)}
+#dpGo{background:linear-gradient(135deg,var(--br2),var(--br1));color:#fff;border:none;border-radius:50px;padding:9px 16px;font-family:'Lato',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer}
+#dpLks{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
+.dpLk{background:var(--brb);color:var(--br2);padding:7px 13px;border-radius:50px;font-size:.77rem;font-weight:700;border:1px solid var(--bdr2);cursor:pointer;transition:all .18s}
+.dpLk:hover{background:var(--br2);color:#fff}
+#dpX{position:absolute;top:13px;right:13px;background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--mut)}
+</style></head><body>
+<div class="cfB" id="cfB"></div>
+<div id="wModal">
+<div class="wCard" style="text-align:center">
+  <div class="wBadge">🚂 Jour 13 — À la Gare</div>
+  <div class="wLogo">FAST <em>FRENCH</em> LAB</div>
+  <p class="wSub" style="margin-top:5px">Train station vocabulary · Announcements · Numbers 70–200<br>Dialogues · Best Response · TEF/TCF Canada A1</p>
+  <div style="margin-bottom:12px">
+    <div style="font-size:.6rem;font-weight:700;color:var(--br2);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px">How are you feeling today?</div>
+    <div class="moodRow" id="mSRow">
+      <button class="moodBtn" data-mood="😩">😩</button><button class="moodBtn" data-mood="😐">😐</button>
+      <button class="moodBtn" data-mood="🙂">🙂</button><button class="moodBtn" data-mood="😄">😄</button>
+      <button class="moodBtn" data-mood="🔥">🔥</button>
+    </div>
+  </div>
+  <div class="wFg"><label>Your Full Name</label><input type="text" id="wName" placeholder="Ex: Amara Diallo" autocomplete="name"><p class="wErr" id="wNE">Please enter your name.</p></div>
+  <div class="wFg"><label>Email Address</label><input type="email" id="wEmail" placeholder="Ex: amara@email.com" autocomplete="email"><p class="wErr" id="wEE">Please enter a valid email.</p></div>
+  <button class="wBtn" id="wStartBtn">🚂 Start Day 13 — Commencer !</button>
+</div>
+</div>
+<div id="toast"></div>
+<div class="hdr"><div class="logo">FAST <em>FRENCH</em> LAB</div><div class="dayPill">🚂 JOUR 13</div></div>
+<div class="progWrap">
+  <div class="progSegs" id="pSegs"></div>
+  <div class="progLbl"><span>Vocabulary</span><span>Announcements</span><span>Numbers</span><span>Dialogues</span><span>Best Response</span><span>Simulator</span><span>A1 Extract</span></div>
+</div>
+
+<div class="wrap">
+<div class="dots" id="dotsW"></div>
+
+<!-- ══ SEC 1: VOCABULARY + CHUNKS ══ -->
+<div class="sec show" id="sec1">
+<div class="card">
+  <div class="cardHdr"><div class="cardIco icoB">🚂</div><div><div class="cardTitle">Part 1 — À la Gare · Train Station</div><div class="cardSub">20+ essential words · Chunks you can use immediately · TEF/TCF reading & listening</div></div></div>
+  <div class="tcf">📌 <strong>TEF/TCF Canada:</strong> Train station texts appear in <em>every</em> section of the exam — reading signs, listening to announcements, dialogues at the ticket window. This vocabulary is not optional — it is exam-critical! · <em>Le vocabulaire de la gare apparaît dans toutes les épreuves.</em></div>
+  <div class="coach"><div class="coachAv">👩🏾‍🏫</div><div><div class="coachName">Coach Linda</div><div class="coachTxt">"Welcome to the train station — <strong>bienvenue à la gare!</strong> Before we hear announcements and do dialogues, you need to own the vocabulary. Click each card, listen, then press 🎤 to repeat. English is hidden — click <strong>🇬🇧</strong> to reveal. Go through every card before moving on!"</div></div></div>
+  <div class="badge bBr">🎫 Core vocabulary — 20 essential words</div>
+  <div class="vcGrid" id="vocabCards"></div>
+  <div class="audRow" style="margin-bottom:14px">
+    <button class="bBr_" id="hearAllVocabBtn">🔊 Hear All</button>
+    <button class="bBr_" id="revAllVocabBtn">🇬🇧 Reveal All English</button>
+    <button class="bRec" id="vocabRepR">🎤 Repeat All</button>
+    <button class="bPb" id="vocabRepP">▶️</button>
+  </div>
+  <div class="badge bGl">💬 Expressions-clés · Ready-to-use chunks</div>
+  <div class="coach"><div class="coachAv">👩🏾‍🏫</div><div><div class="coachName">Coach Linda</div><div class="coachTxt">"These are your <strong>survival phrases at the train station</strong> — exactly the kind of chunks TEF examiners expect you to produce. Click to expand each one, hear the example, then record yourself saying it."</div></div></div>
+  <div id="chunkCards"></div>
+  <div class="badge bBr" style="margin-top:14px">🧩 Vocabulary Quiz — 6 questions</div>
+  <div id="vocabQuiz"></div>
+  <div class="audRow"><button class="bBr_" id="checkVQBtn">✅ Check</button><button class="redoB" id="resetVQBtn">🔄 Redo</button></div>
+  <div class="scoreBox" id="vqScore"><div class="scoreN" id="vqScoreN">0/6</div><p style="font-size:.77rem;color:var(--gn);margin-top:4px;font-weight:600">Vocabulary Score</p></div>
+</div>
+<div class="navBar"><div></div><button class="bNxt" id="s1Next">Announcements →</button></div>
+</div>
+
+<!-- ══ SEC 2: ANNOUNCEMENTS ══ -->
+<div class="sec" id="sec2">
+<div class="card">
+  <div class="cardHdr"><div class="cardIco icoG">📢</div><div><div class="cardTitle">Part 2 — Les Annonces · Train Announcements</div><div class="cardSub">Authentic-style audio announcements · SNCF vocabulary · Comprehension</div></div></div>
+  <div class="tcf">📌 <strong>TEF/TCF Canada Listening:</strong> Announcements are a dedicated question type in the TEF listening section. You must identify the key information: destination, platform, time, delay, reason. Practice this format and you gain easy marks!</div>
+  <div class="coach"><div class="coachAv">👩🏾‍🏫</div><div><div class="coachName">Coach Linda</div><div class="coachTxt">"These announcements are styled exactly like real French train station (SNCF) announcements. Press 🔊 to hear them — I will speak them at announcement speed. After listening, try to answer the comprehension questions WITHOUT reading the text first. Then reveal the English and read carefully."</div></div></div>
+  <div id="announceSection"></div>
+  <div class="badge bBr" style="margin-top:14px">📝 Announcement Comprehension</div>
+  <div id="announceQs"></div>
+  <div class="audRow"><button class="bBr_" id="checkAQBtn">✅ Check Answers</button><button class="redoB" id="resetAQBtn">🔄 Redo</button></div>
+  <div class="scoreBox" id="aqScore"><div class="scoreN" id="aqScoreN">0/6</div><p style="font-size:.77rem;color:var(--gn);margin-top:4px;font-weight:600">Announcement Comprehension</p></div>
+</div>
+<div class="navBar"><button class="bPrv" id="s2Prev">← Back</button><button class="bNxt" id="s2Next">Numbers →</button></div>
+</div>
+
+<!-- ══ SEC 3: NUMBERS 70-200 ══ -->
+<div class="sec" id="sec3">
+<div class="card">
+  <div class="cardHdr"><div class="cardIco icoPu">🔢</div><div><div class="cardTitle">Part 3 — Les Nombres 70 à 200</div><div class="cardSub">The tricky numbers · Platform numbers · Prices · Times</div></div></div>
+  <div class="tcf">📌 <strong>TEF/TCF Canada:</strong> Numbers 70–100 are notoriously tricky for Anglophones. TEF listening tasks ALWAYS include them in prices, times, and platform numbers. Master the pattern — don't just memorise!</div>
+  <div class="coach"><div class="coachAv">👩🏾‍🏫</div><div><div class="coachName">Coach Linda</div><div class="coachTxt">"French numbers 70–99 do NOT follow the simple pattern you know. French uses <em>soixante-dix</em> (60+10) for 70, and <em>quatre-vingts</em> (4×20) for 80. It looks strange but once you see the pattern, it clicks. <strong>In a train station, you hear these numbers constantly — platform 82, price 97€, departure 17h45.</strong>"</div></div></div>
+  <div class="badge bPu">🔢 The pattern explained</div>
+  <div style="background:linear-gradient(135deg,#F5F0FF,#EDE8FF);border:1.5px solid rgba(107,47,160,.18);border-radius:var(--r);padding:16px;margin-bottom:13px">
+    <div style="font-size:.88rem;color:var(--txt);line-height:2.0;font-family:Cardo,serif">
+      <strong style="color:var(--pu)">60-69:</strong> soixante (60) + <em>number</em> → normal<br>
+      <strong style="color:var(--pu)">70-79:</strong> soixante-<strong>dix</strong> (60+10) → soixante-onze, soixante-douze...<br>
+      <strong style="color:var(--pu)">80:</strong> quatre-vingt<strong>s</strong> (4×20) → <em>note the s!</em><br>
+      <strong style="color:var(--pu)">81-89:</strong> quatre-vingt-<em>number</em> → <em>NO s on vingt!</em><br>
+      <strong style="color:var(--pu)">90-99:</strong> quatre-vingt-<strong>dix</strong> (4×20+10) → quatre-vingt-onze...<br>
+      <strong style="color:var(--pu)">100:</strong> cent | <strong>101-199:</strong> cent + number | <strong>200:</strong> deux cent<strong>s</strong>
+    </div>
+  </div>
+  <div class="badge bPu">🔢 Click each number to hear it</div>
+  <div class="numGrid" id="numCards"></div>
+  <div class="audRow" style="margin-bottom:13px">
+    <button class="bBr_" id="hearAllNumBtn">🔊 Hear All Numbers</button>
+    <button class="bBr_" id="revAllNumBtn">🇬🇧 Reveal All</button>
+    <button class="bRec" id="numRepR">🎤 Repeat All</button>
+    <button class="bPb" id="numRepP">▶️</button>
+  </div>
+  <div class="badge bPu" style="margin-top:4px">🎯 Train station numbers — Exercises</div>
+  <div class="infoBox"><strong>Context:</strong> You are at the gare. Fill in the correct French number in each sentence.</div>
+  <div id="numEx"></div>
+  <div class="audRow"><button class="bBr_" id="checkNumBtn">✅ Check</button><button class="redoB" id="resetNumBtn">🔄 Redo</button></div>
+  <div id="numFb" style="display:none;margin-top:9px;padding:11px;border-radius:10px;font-size:.82rem;font-weight:700;line-height:1.7"></div>
+  <div class="badge bPu" style="margin-top:14px">🎧 Number Dictation — type what you hear</div>
+  <div id="numDictation"></div>
+</div>
+<div class="navBar"><button class="bPrv" id="s3Prev">← Back</button><button class="bNxt" id="s3Next">Dialogues →</button></div>
+</div>
+
+<!-- ══ SEC 4: THREE DIALOGUES ══ -->
+<div class="sec" id="sec4">
+<div class="card">
+  <div class="cardHdr"><div class="cardIco icoB">💬</div><div><div class="cardTitle">Part 4 — Trois Dialogues à la Gare</div><div class="cardSub">Ticket window · Between passengers · Lost traveller · Comprehension in French</div></div></div>
+  <div class="tcf">📌 <strong>TEF/TCF Canada:</strong> Short dialogues in public contexts (gare, aéroport, pharmacie) are the most common listening format. Listen for: WHO speaks, WHAT they want, the KEY information exchanged.</div>
+  <div class="infoBox">🇬🇧 English is hidden for each line — click <strong>🇬🇧</strong> to reveal. Try to understand the French first! Press 🔊 to hear any line.</div>
+  <div id="dialogSection"></div>
+  <div class="badge bBr" style="margin-top:14px">📝 Dialogue Comprehension — in French</div>
+  <div class="infoBox">Questions are in French with English underneath — just like TEF/TCF. Press 🔊 to hear each question.</div>
+  <div id="dialogQs"></div>
+  <div class="audRow"><button class="bBr_" id="checkDQBtn">✅ Submit</button><button class="redoB" id="resetDQBtn">🔄 Redo</button></div>
+  <div class="scoreBox" id="dqScore"><div class="scoreN" id="dqScoreN">0/9</div><p style="font-size:.77rem;color:var(--gn);margin-top:4px;font-weight:600">Dialogue Comprehension</p></div>
+  <div class="gate" id="gate4"><p>⛔ Below 65% — Listen again. Focus on who says what and what they need or want!</p><button class="bBr_" id="retrydq4">🔄 Try Again</button></div>
+</div>
+<div class="navBar"><button class="bPrv" id="s4Prev">← Back</button><button class="bNxt" id="s4Next">Best Response →</button></div>
+</div>
+
+<!-- ══ SEC 5: BEST RESPONSE ══ -->
+<div class="sec" id="sec5">
+<div class="card">
+  <div class="cardHdr"><div class="cardIco icoGn">🎯</div><div><div class="cardTitle">Part 5 — Quelle est la meilleure réponse ?</div><div class="cardSub">Best response · Fully in French · Natural conversation · TEF oral preparation</div></div></div>
+  <div class="tcf">📌 <strong>TEF/TCF Canada Oral:</strong> The oral interaction section asks you to choose or produce the most appropriate response to what someone says. The options are always in French — you must understand the context to choose correctly.</div>
+  <div class="coach"><div class="coachAv">👩🏾‍🏫</div><div><div class="coachName">Coach Linda</div><div class="coachTxt">"You will hear or read a statement. All four answer options are in <strong>French only</strong>. There is a small English hint hidden below each question — click to reveal if you need it. But try first in French! This trains your instinctive response — essential for the TEF oral section."</div></div></div>
+  <div id="bestRespSection"></div>
+  <div class="scoreBox" id="brScore"><div class="scoreN" id="brScoreN">0/8</div><p style="font-size:.77rem;color:var(--gn);margin-top:4px;font-weight:600">Best Response Score</p></div>
+</div>
+<div class="navBar"><button class="bPrv" id="s5Prev">← Back</button><button class="bNxt" id="s5Next">Simulator →</button></div>
+</div>
+
+<!-- ══ SEC 6: DIALOGUE SIMULATOR ══ -->
+<div class="sec" id="sec6">
+<div class="card">
+  <div class="cardHdr"><div class="cardIco icoB">🎭</div><div><div class="cardTitle">Part 6 — Simulateur de Dialogue · Gare</div><div class="cardSub">STT · Buy a ticket · Ask for directions · 12 questions</div></div></div>
+  <div class="tcf">📌 <strong>TEF/TCF Canada Oral:</strong> You will play the role of a traveller at the gare. I will play the ticket agent, a station officer, or a fellow passenger. Answer each question using today's vocabulary. This mirrors the TEF oral interaction task exactly.</div>
+  <div class="coach"><div class="coachAv">👩🏾‍🏫</div><div><div class="coachName">Coach Linda</div><div class="coachTxt">"Press 🔊 to hear my question, then press <strong>🎤 Speak</strong> to answer in French. The simulator writes what you say. Compare with the model answer and redo as many times as you want. Use numbers, vocabulary, and chunks from today!"</div></div></div>
+  <div class="simCard" id="simMain">
+    <div style="font-size:.59rem;font-weight:700;color:var(--br2);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;font-family:Cinzel,serif" id="simQNum">Question 1 / 12</div>
+    <div style="position:relative">
+      <div style="position:absolute;top:0;right:0;font-size:.67rem;color:var(--mut)" id="simPct">0%</div>
+    </div>
+    <div class="simQFr" id="simQTxt">Loading...</div>
+    <div class="audRow" style="margin-bottom:9px">
+      <button class="bBr_" id="simAudBtn">🔊 Hear question</button>
+      <button class="bOut" id="simHintBtn">💡 Hint</button>
+      <button class="bOut" id="simModelBtn">👁 Model</button>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--bdr2);border-radius:var(--rsm);padding:10px 13px;display:none;font-size:.82rem;line-height:1.65;color:var(--txt2)" id="simHint"></div>
+    <div style="background:var(--glb2);border:1px solid rgba(184,146,10,.22);border-radius:var(--rsm);padding:10px 13px;margin-top:8px;display:none;font-size:.84rem;font-family:Cardo,serif;color:var(--txt);line-height:1.7" id="simModel"></div>
+    <div class="sttBox" id="sttBox"><div style="font-size:.58rem;font-weight:700;color:var(--br2);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;font-family:Cinzel,serif">🗣️ What you said:</div><div id="sttLive">—</div></div>
+    <div class="audRow" style="margin-top:9px;flex-wrap:wrap">
+      <button class="bStt" id="simSttBtn">🎤 Speak</button>
+      <button class="bPb show" id="simPb2">▶️</button>
+      <button class="redoB" id="simRedoBtn">🔄 Retry</button>
+    </div>
+    <div style="font-size:.71rem;color:var(--mut);text-align:center;margin-top:7px">— or type below —</div>
+    <textarea class="txInp" id="simAns" rows="2" placeholder="Write your answer in French..." style="margin-top:6px"></textarea>
+    <div class="audRow" style="margin-top:8px"><button class="bBr_" id="simSubmitBtn" style="flex:1;justify-content:center">✅ Submit Answer</button></div>
+    <div style="background:var(--bg3);border:1px solid var(--bdr2);border-radius:var(--rsm);padding:11px;margin-top:10px;display:none;font-size:.82rem;line-height:1.65;color:var(--txt2)" id="simFb"></div>
+    <div class="coachFb" id="simCoach"><div class="cfbLbl">👩🏾‍🏫 Coach Linda — Feedback</div><div class="cfbTxt" id="simCoachTxt"></div></div>
+    <div style="display:flex;gap:7px;margin-top:12px"><button class="bPrv" id="simPrevBtn" style="min-height:40px;font-size:.77rem">← Previous</button><button class="bNxt" id="simNextBtn" style="min-height:40px;font-size:.79rem;flex:1">Next question →</button></div>
+  </div>
+</div>
+<div class="navBar"><button class="bPrv" id="s6Prev">← Back</button><button class="bNxt" id="s6Next">A1 Extract →</button></div>
+</div>
+
+<!-- ══ SEC 7: A1 AUDIO EXTRACT + WRITING + QUIZ ══ -->
+<div class="sec" id="sec7">
+<!-- A1 EXTRACT -->
+<div class="card">
+  <div class="cardHdr"><div class="cardIco icoGn">🎙️</div><div><div class="cardTitle">Part 7A — Extrait Audio A1 · TEF/TCF Style</div><div class="cardSub">Listen first → Answer questions → Reveal transcription</div></div></div>
+  <div class="tcf">📌 <strong>TEF/TCF Canada A1 Listening:</strong> This simulates a real TEF audio extract. You must listen, answer questions, and <strong>ONLY reveal the transcription after you have submitted your answers</strong>. This is exactly how the exam works — no text during listening!</div>
+  <div class="coach"><div class="coachAv">👩🏾‍🏫</div><div><div class="coachName">Coach Linda</div><div class="coachTxt">"Press 🔊 to hear the A1-level extract. Listen carefully — you can hear it up to 3 times. Then answer ALL the questions. <strong>Do NOT reveal the transcription until you have submitted.</strong> In the real TEF, the text is never shown during the listening task."</div></div></div>
+  <div class="extractBox">
+    <div class="extractLbl">🎙️ Extrait Audio A1 — À la Gare · Duration: ~45 seconds</div>
+    <div class="extractWave" id="extractWave">
+      <div class="wave-bar" style="animation-delay:0s"></div><div class="wave-bar" style="animation-delay:.1s"></div>
+      <div class="wave-bar" style="animation-delay:.2s"></div><div class="wave-bar" style="animation-delay:.3s"></div>
+      <div class="wave-bar" style="animation-delay:.4s"></div><div class="wave-bar" style="animation-delay:.1s"></div>
+      <div class="wave-bar" style="animation-delay:.2s"></div><div class="wave-bar" style="animation-delay:.05s"></div>
+      <div class="wave-bar" style="animation-delay:.35s"></div><div class="wave-bar" style="animation-delay:.15s"></div>
+      <div class="wave-bar" style="animation-delay:.25s"></div><div class="wave-bar" style="animation-delay:.4s"></div>
+    </div>
+    <div class="audRow">
+      <button class="bBr_" id="extractSpkBtn">🔊 Listen to Extract</button>
+      <button class="bOut" id="extractSlowBtn">🐢 Slow</button>
+      <button class="bRec" id="extractRecBtn">🎤 Record Response</button>
+      <button class="bPb" id="extractPbBtn">▶️</button>
+      <span style="font-size:.72rem;color:var(--br4);margin-left:6px" id="extractPlays">Plays: 0/3</span>
+    </div>
+  </div>
+  <div class="badge bBr">📝 Answer ALL questions before revealing the transcription</div>
+  <div id="extractQs"></div>
+  <div class="audRow">
+    <button class="bBr_" id="submitExtractBtn">✅ Submit All Answers</button>
+    <button class="redoB" id="resetExtractBtn">🔄 Redo</button>
+  </div>
+  <div class="scoreBox" id="extractScore"><div class="scoreN" id="extractScoreN">0/5</div><p style="font-size:.77rem;color:var(--gn);margin-top:4px;font-weight:600">Extract Comprehension</p></div>
+  <div class="transcriptBox" id="transcriptBox">
+    <div class="transcriptLbl">📄 Transcription — revealed after your attempt</div>
+    <div class="transcriptTxt" id="transcriptTxt"></div>
+    <div style="font-size:.7rem;color:var(--mut);margin-top:8px;font-style:italic">In the real TEF/TCF Canada, this transcription is never shown. You are training yourself to listen without a safety net — exactly what the exam demands.</div>
+  </div>
+</div>
+
+<!-- TIMED COPY -->
+<div class="card">
+  <div class="cardHdr"><div class="cardIco icoG">⏱️</div><div><div class="cardTitle">Part 7B — Timed Copy Challenge</div><div class="cardSub">3 minutes · Train station context · Numbers · Vocabulary</div></div></div>
+  <div style="background:linear-gradient(135deg,#FFFCEE,#FFF8DC);border:1.5px solid rgba(184,146,10,.25);border-radius:var(--r);padding:16px;margin-bottom:13px">
+    <div style="font-size:.59rem;font-weight:700;color:var(--gl);text-transform:uppercase;letter-spacing:1px;margin-bottom:9px;font-family:Cinzel,serif">📋 Copy this paragraph — read first:</div>
+    <div style="font-size:.87rem;color:var(--txt);line-height:2.15;font-family:Cardo,serif" id="copyPara">Je suis à la gare de Lyon. Mon train part à dix-sept heures quarante-cinq, voie quatre-vingt-deux. Le billet coûte soixante-quinze euros. Il y a un retard de vingt minutes à cause d'un incident technique. Je cherche la salle d'attente parce que j'ai une valise lourde. Enfin, le contrôleur annonce : « Tous les voyageurs pour Paris sont priés de composter leur billet avant de monter à bord. »</div>
+    <div class="audRow">
+      <button class="bBr_" id="copySpkBtn">🔊 Listen first</button>
+      <button class="bOut" id="copySlowBtn">🐢 Slow</button>
+    </div>
+  </div>
+  <div id="tdDisp">3:00</div>
+  <button class="bBr_" id="tcStartBtn" style="display:flex;margin:0 auto 11px;justify-content:center">▶ Start Timer</button>
+  <textarea class="txInp" id="copyTA" rows="5" placeholder="Copy the text here exactly — every accent and number counts!" disabled></textarea>
+  <div class="wcD" id="copyWC">0 words</div>
+  <div class="audRow" style="margin-top:8px">
+    <button class="bBr_" id="checkCopyBtn" style="display:none">✅ Check my copy</button>
+    <button class="bOut" id="readCopyBtn" style="display:none">🔊 Hear mine</button>
+    <button class="bRec" id="copRec" style="display:none">🎤 Record</button>
+    <button class="bPb" id="copPb">▶️</button>
+  </div>
+  <div id="copyFb" style="display:none;margin-top:9px;padding:12px;border-radius:10px;font-size:.82rem;font-weight:700;line-height:1.7"></div>
+</div>
+
+<!-- FREE WRITING -->
+<div class="card">
+  <div class="cardHdr"><div class="cardIco icoB">✍️</div><div><div class="cardTitle">Part 7C — Free Expression</div><div class="cardSub">7+ sentences · Your train journey · TEF writing practice</div></div></div>
+  <div class="tcf">📌 <strong>TEF/TCF Canada Production Écrite:</strong> Describe a real or imaginary train journey using today's vocabulary. Include: destination, departure time, platform, ticket type, numbers, and at least one thing that went wrong (retard, problème...). Exactly the type of task in TEF writing!</div>
+  <div class="badge bBr">💬 Sentence starters — click to insert</div>
+  <div class="starterChips" id="starterChips"></div>
+  <textarea class="txInp" id="freeTA" rows="8" placeholder="Write 7+ sentences in French about a train journey — real or imagined. Use: la gare, le billet, le quai, le retard, numbers, times, chunks from today..." style="margin-bottom:9px" id="freeTA"></textarea>
+  <div class="wcD" id="freeWC">0 words</div>
+  <div class="audRow">
+    <button class="bBr_" id="checkFreeBtn">✅ Get Coach Linda Feedback</button>
+    <button class="bOut" id="freeSpkBtn">🔊 Hear it</button>
+    <button class="bRec" id="freeRecBtn">🎤 Record</button>
+    <button class="bPb" id="freePbBtn">▶️</button>
+    <button class="redoB" id="freeClearBtn">🔄 Clear</button>
+  </div>
+  <div class="coachFb" id="freeCoach"><div class="cfbLbl">👩🏾‍🏫 Full Correction — Coach Linda</div><div class="cfbTxt" id="freeCoachTxt"></div></div>
+  <div class="ssBox" id="freeSS"><div class="ssTtl">📸 Fast French Lab · Jour 13 · Mon voyage en train</div><div class="ssW" id="freeSSW"></div><div class="ssRem">📸 Screenshot and send to WhatsApp for Coach Linda correction!</div></div>
+</div>
+
+<!-- FINAL QUIZ -->
+<div class="card">
+  <div class="cardHdr"><div class="cardIco icoGn">🏆</div><div><div class="cardTitle">Part 7D — Final Quiz + Reflection</div><div class="cardSub">10 questions · Complete Day 13</div></div></div>
+  <div class="badge bBr">🏆 Final Quiz — 10 Questions</div>
+  <div id="finalQuiz"></div>
+  <div class="scoreBox" id="quizSc"><div class="scoreN" id="quizScN">0/10</div><p style="font-size:.77rem;color:var(--gn);margin-top:4px;font-weight:600" id="quizScLbl">Final Score</p></div>
+  <div class="gate" id="gate7"><p>⛔ Below 70% — Review vocabulary and numbers, then retry!</p><button class="bBr_" id="retryQuiz">🔄 Try Again</button></div>
+  <div class="badge bBr" style="margin-top:18px">📝 Reflection (optional)</div>
+  <div id="reflQs"></div>
+  <div style="background:var(--bg3);border:1px solid var(--bdr2);border-radius:var(--r);padding:13px;margin-top:12px">
+    <div style="font-size:.59rem;font-weight:700;color:var(--br2);text-transform:uppercase;letter-spacing:1px;margin-bottom:7px;font-family:Cinzel,serif">How are you feeling NOW?</div>
+    <div class="moodRow" id="mERow" style="justify-content:flex-start;gap:7px;flex-wrap:wrap">
+      <button class="moodBtn" data-emood="😩">😩</button><button class="moodBtn" data-emood="😐">😐</button>
+      <button class="moodBtn" data-emood="🙂">🙂</button><button class="moodBtn" data-emood="😄">😄</button>
+      <button class="moodBtn" data-emood="🔥">🔥</button>
+    </div>
+  </div>
+  <button class="bNxt" id="completeBtn" style="width:100%;justify-content:center;margin-top:15px;display:flex">🎉 Complete Day 13!</button>
+</div>
+<div class="navBar"><button class="bPrv" id="s7Prev">← Back</button></div>
+</div>
+
+<!-- COMPLETION -->
+<div id="compSc">
+  <div style="font-size:3.5rem;margin-bottom:.8rem">🚂</div>
+  <h1 style="font-family:Cinzel,serif;font-size:1.65rem;color:var(--br2);margin-bottom:.3rem">Bon voyage !</h1>
+  <p style="color:var(--mut);font-size:.84rem;margin-bottom:.4rem">Day 13 complete · À la Gare · You can navigate any French train station!</p>
+  <div style="background:var(--brb);border:1px solid var(--bdr2);border-radius:var(--rsm);padding:9px 13px;font-size:.8rem;color:var(--br2);font-weight:600;margin:10px 0">🎊 You can now read signs, understand announcements, buy tickets, and hold conversations at a French train station!</div>
+  <div class="stGrid">
+    <div class="stCard"><div style="font-size:1.2rem;margin-bottom:3px">✍️</div><div class="stV" id="stWords">0</div><div class="stL">Words written</div></div>
+    <div class="stCard"><div style="font-size:1.2rem;margin-bottom:3px">🏆</div><div class="stV" id="stQuiz">—%</div><div class="stL">Quiz score</div></div>
+    <div class="stCard"><div style="font-size:1.2rem;margin-bottom:3px">🎤</div><div class="stV" id="stSpk">0</div><div class="stL">Speaking sessions</div></div>
+    <div class="stCard"><div style="font-size:1.2rem;margin-bottom:3px">📢</div><div class="stV" id="stComp">—%</div><div class="stL">Comprehension</div></div>
+  </div>
+  <div style="background:var(--brb);border-radius:var(--rsm);padding:9px 13px;font-size:.79rem;color:var(--br2);font-weight:600;margin:9px 0">Mood: <span id="stMs">—</span> → <span id="stMe">—</span></div>
+  <div id="saveCon" style="background:var(--gnb);border:1px solid var(--gn);border-radius:var(--rsm);padding:9px;font-size:.77rem;color:var(--gn);font-weight:700;margin:9px 0;display:none">✅ Progress saved!</div>
+  <p style="font-size:.76rem;color:var(--mut);margin:9px 0">📸 Screenshot and send to the WhatsApp group!</p>
+  <div style="background:linear-gradient(135deg,#F7F2EC,#F0E8DC);border:1.5px solid var(--bdr2);border-radius:var(--r);padding:14px;margin-top:13px;font-size:.82rem;color:var(--txt2);line-height:1.75">
+    <span style="color:var(--br2);font-weight:700;font-family:Cinzel,serif">👩🏾‍🏫 Coach Linda:</span> "Treize jours! You walked into a virtual French train station today and you understood the announcements, you bought a ticket, you helped a lost traveller — all in French! The TEF/TCF Canada listening tasks on train stations will feel familiar now. Next stop: Day 14. Le train part dans un moment — soyez prêt(e)!"
+  </div>
+</div>
+</div>
+
+<div class="cfloat"><div class="cbubble" id="cb"><div class="cbName">Coach Linda</div><span id="cbTxt"></span></div><div class="cav" id="coachAv">👩🏾‍🏫</div></div>
+<button id="dictFab" title="Dictionary">📖</button>
+<div id="dictP">
+  <button id="dpX">×</button><div class="dpH"></div>
+  <h3 style="font-size:.88rem;font-weight:700;margin-bottom:3px;color:var(--txt)">📖 French Dictionary</h3>
+  <p style="font-size:.69rem;color:var(--mut);margin-bottom:9px">Look up any word — opens in a popup.</p>
+  <div class="dpRow"><input type="text" id="dpW" placeholder="Type a French word..." autocomplete="off"><button id="dpGo">Look up →</button></div>
+  <div id="dpLks"></div>
+</div>
+
+<script>
+// CONFIG
+var AT_TOKEN='patUosqmnatcmyQ9b.122d09bdf7cce0da1444baf44f88eb6ddb41aa27312a1ec65ca5cd700c51a2e9';
+var AT_BASE='appYOYauNLO2qcSaT';
+var AM='claude-sonnet-4-6';
+var AT_L='Lesson Submissions';var AT_S='Speaking Progress';var AT_R='Reflection Journal';
+
+// STATE
+var sN='',sE='',mS='',mE='';
+var curSec=1,blobs={},mRecs={},cTmr=null,spkN=0;
+var copySecs=180,copyStarted=false,copyTmr=null;
+var simIdx=0,simAnswers=[],sttRecog=null,sttActive=false;
+var vqDone={},aqDone={},dqDone={},brDone={},quizDone={},extractDone={};
+var dqSc=0,aqSc=0,brSc=0,extractSc=0,extractPlays=0;
+var frVoice=null;
+
+// VOCAB DATA
+var VOCAB=[
+  {fr:'la gare',en:'train station',ipa:'[la gaʁ]',emo:'🏛️',ex:'La gare de Lyon est très grande.'},
+  {fr:'le billet',en:'ticket',ipa:'[lə bijɛ]',emo:'🎫',ex:'Je voudrais un billet pour Paris.'},
+  {fr:'le quai',en:'platform',ipa:'[lə kɛ]',emo:'🛤️',ex:'Le train part du quai numéro sept.'},
+  {fr:'la voie',en:'track / platform track',ipa:'[la vwa]',emo:'🛤️',ex:'Le train arrive sur la voie quatre.'},
+  {fr:"l'horaire",en:'timetable / schedule',ipa:'[lɔʁɛʁ]',emo:'📅',ex:"Consultez l'horaire sur l'écran."},
+  {fr:'le départ',en:'departure',ipa:'[lə depaʁ]',emo:'🚀',ex:'Le départ est à quatorze heures trente.'},
+  {fr:"l'arrivée",en:'arrival',ipa:'[laʁive]',emo:'🛬',ex:"L'arrivée est prévue à seize heures."},
+  {fr:'le retard',en:'delay',ipa:'[lə ʁətaʁ]',emo:'⏰',ex:'Il y a un retard de vingt minutes.'},
+  {fr:'le guichet',en:'ticket window / counter',ipa:'[lə giʃɛ]',emo:'🪟',ex:'Je fais la queue au guichet.'},
+  {fr:'la salle d\'attente',en:'waiting room',ipa:'[sal datɑ̃t]',emo:'🪑',ex:"La salle d'attente est au rez-de-chaussée."},
+  {fr:'la correspondance',en:'connection (train)',ipa:'[kɔʁɛspɔ̃dɑ̃s]',emo:'🔄',ex:"J'ai une correspondance à Lyon."},
+  {fr:"l'aller simple",en:'one-way ticket',ipa:'[ale sɛ̃pl]',emo:'➡️',ex:"Un aller simple pour Marseille, s'il vous plaît."},
+  {fr:"l'aller-retour",en:'return ticket',ipa:'[ale ʁətuʁ]',emo:'↔️',ex:"Je voudrais un aller-retour pour Bordeaux."},
+  {fr:'composter',en:'to validate a ticket',ipa:'[kɔ̃pɔste]',emo:'✅',ex:'Pensez à composter votre billet avant de monter.'},
+  {fr:'le composteur',en:'ticket validation machine',ipa:'[kɔ̃pɔstœʁ]',emo:'🖨️',ex:'Le composteur est à l\'entrée du quai.'},
+  {fr:'le contrôleur',en:'ticket inspector',ipa:'[kɔ̃tʁolœʁ]',emo:'👮',ex:'Le contrôleur vérifie les billets dans le train.'},
+  {fr:'les bagages',en:'luggage',ipa:'[le bagaʒ]',emo:'🧳',ex:'Je mets mes bagages dans le filet.'},
+  {fr:'la consigne',en:'left-luggage / luggage storage',ipa:'[la kɔ̃siɲ]',emo:'🔒',ex:'Je dépose ma valise à la consigne.'},
+  {fr:'en première classe',en:'in first class',ipa:'[ɑ̃ pʁəmjɛʁ klas]',emo:'⭐',ex:'Je voyage en première classe.'},
+  {fr:'en deuxième classe',en:'in second class',ipa:'[ɑ̃ døzjɛm klas]',emo:'💺',ex:'Mon billet est en deuxième classe.'}
+];
+
+var VOCAB_SPK=VOCAB.map(function(v){return v.fr+'. '+v.ex;});
+
+var CHUNKS=[
+  {fr:"Un aller simple pour Paris, s'il vous plaît.",en:"A one-way ticket to Paris, please.",ex:"You say this at the guichet to buy a ticket. Very common TEF phrase!"},
+  {fr:"Un aller-retour pour Lyon, deuxième classe.",en:"A return ticket to Lyon, second class.",ex:"Specify the class — the agent will ask if you don't!"},
+  {fr:"À quelle heure part le prochain train pour Marseille ?",en:"What time does the next train to Marseille leave?",ex:"Essential question — combine with a destination city!"},
+  {fr:"Le train pour Paris, c'est quel quai ?",en:"The train to Paris — which platform?",ex:"You will hear this question in every TEF gare dialogue."},
+  {fr:"Il y a un retard ?",en:"Is there a delay?",ex:"Short and vital — the answer might be 'vingt minutes de retard'."},
+  {fr:"Où est le guichet / la salle d'attente / la consigne ?",en:"Where is the ticket window / waiting room / left-luggage?",ex:"Swap the place noun to ask about anything in the station!"},
+  {fr:"Je voudrais réserver une place, s'il vous plaît.",en:"I would like to reserve a seat, please.",ex:"Add: en fenêtre (window) or côté couloir (aisle) for a richer answer!"},
+  {fr:"Pensez à composter votre billet avant de monter à bord.",en:"Remember to validate your ticket before boarding.",ex:"This is THE classic SNCF announcement — you WILL hear it in TEF listening!"}
+];
+var CHUNK_SPK=CHUNKS.map(function(c){return c.fr+'. '+c.ex;});
+
+var NUMBERS=[
+  {n:70,fr:'soixante-dix',en:'60+10',note:'Not septante! French adds 10 to 60.'},
+  {n:71,fr:'soixante et onze',en:'60+11 — note: "et" before onze',note:'"et" only appears at 71, not 81, 91.'},
+  {n:72,fr:'soixante-douze',en:'60+12',note:'Pattern: soixante + 12 to 19'},
+  {n:75,fr:'soixante-quinze',en:'60+15 — 75€ common price!',note:'Train tickets often cost soixante-quinze euros.'},
+  {n:79,fr:'soixante-dix-neuf',en:'60+19',note:'Last of the soixante-dix series.'},
+  {n:80,fr:'quatre-vingts',en:'4×20 — note the S!',note:'The S disappears when followed by another number.'},
+  {n:81,fr:'quatre-vingt-un',en:'4×20+1 — no S on vingt!',note:'From 81 onwards: NO s on vingt.'},
+  {n:82,fr:'quatre-vingt-deux',en:'4×20+2 — common platform number',note:'Quai quatre-vingt-deux — you will hear this!'},
+  {n:85,fr:'quatre-vingt-cinq',en:'4×20+5',note:'Common in prices and platform numbers.'},
+  {n:90,fr:'quatre-vingt-dix',en:'4×20+10',note:'Not nonante! French adds 10 to 80.'},
+  {n:91,fr:'quatre-vingt-onze',en:'4×20+11',note:'Pattern: quatre-vingt + 11 to 19'},
+  {n:97,fr:'quatre-vingt-dix-sept',en:'4×20+17 — very common in prices',note:'Un billet à quatre-vingt-dix-sept euros.'},
+  {n:99,fr:'quatre-vingt-dix-neuf',en:'4×20+19',note:'Last number before 100.'},
+  {n:100,fr:'cent',en:'100 — no "un" before cent!',note:'NOT un cent — just cent.'},
+  {n:101,fr:'cent un',en:'101 — no s on cent',note:'Cent loses the s when followed by another number.'},
+  {n:120,fr:'cent vingt',en:'120',note:'Platform 120 — cinq heures vingt — common!'},
+  {n:175,fr:'cent soixante-quinze',en:'175',note:'A price like cent soixante-quinze euros.'},
+  {n:200,fr:'deux cents',en:'200 — note the S!',note:'Deux cents has an s because nothing follows it.'}
+];
+var NUM_SPK=NUMBERS.map(function(n){return n.n+'... '+n.fr;});
+
+var ANNOUNCEMENTS=[
+  {
+    title:'Annonce 1 — Départ train Paris',
+    text:"Votre attention, s'il vous plaît. Le train numéro quatre-vingt-deux à destination de Paris Gare du Nord partira voie six dans cinq minutes. Tous les voyageurs sont priés de composter leur billet avant de monter à bord. Merci.",
+    en:"Your attention please. Train number eighty-two to Paris Gare du Nord will depart from track six in five minutes. All passengers are asked to validate their ticket before boarding. Thank you.",
+    key:{platform:'voie six',train:'quatre-vingt-deux',dest:'Paris Gare du Nord',time:'cinq minutes'}
+  },
+  {
+    title:'Annonce 2 — Retard train Lyon',
+    text:"Mesdames et messieurs, en raison d'un incident technique, le train de quatorze heures quinze à destination de Lyon Part-Dieu est retardé de vingt minutes. Nous nous excusons pour la gêne occasionnée. Merci de votre compréhension.",
+    en:"Ladies and gentlemen, due to a technical incident, the 14h15 train to Lyon Part-Dieu is delayed by twenty minutes. We apologise for the inconvenience. Thank you for your understanding.",
+    key:{delay:'vingt minutes',dest:'Lyon Part-Dieu',time:'quatorze heures quinze',reason:'incident technique'}
+  },
+  {
+    title:'Annonce 3 — Correspondance Bordeaux',
+    text:"Attention, les voyageurs à destination de Bordeaux Saint-Jean sont priés de se rendre immédiatement au quai numéro quatre-vingt-dix-sept. Le train part dans deux minutes. Dépêchez-vous, s'il vous plaît.",
+    en:"Attention, passengers travelling to Bordeaux Saint-Jean are asked to proceed immediately to platform ninety-seven. The train departs in two minutes. Please hurry.",
+    key:{platform:'quatre-vingt-dix-sept',dest:'Bordeaux Saint-Jean',time:'deux minutes'}
+  }
+];
+var ANN_SPK=ANNOUNCEMENTS.map(function(a){return a.text;});
+
+var ANNOUNCE_QS=[
+  {q:"Quel est le numéro du train dans l'annonce 1 ?",en:"What is the train number in announcement 1?",opts:["Quatre-vingt","Quatre-vingt-deux","Soixante-douze","Quatre-vingt-douze"],ans:1,fb:"✅ Le train numéro quatre-vingt-deux (82)."},
+  {q:"Dans l'annonce 1 — sur quelle voie part le train ?",en:"In announcement 1 — which track does the train depart from?",opts:["Voie quatre","Voie sept","Voie six","Voie seize"],ans:2,fb:"✅ Le train part voie six."},
+  {q:"Quelle est la cause du retard dans l'annonce 2 ?",en:"What causes the delay in announcement 2?",opts:["Un accident","Un incident technique","La météo","Des travaux"],ans:1,fb:"✅ Un incident technique. This is the most common reason given in SNCF announcements."},
+  {q:"De combien de minutes est le retard dans l'annonce 2 ?",en:"How many minutes is the delay in announcement 2?",opts:["Dix minutes","Quinze minutes","Vingt minutes","Trente minutes"],ans:2,fb:"✅ Vingt minutes de retard (20 minutes)."},
+  {q:"Dans l'annonce 3 — à quel quai les voyageurs doivent-ils aller ?",en:"In announcement 3 — which platform must passengers go to?",opts:["Quai soixante-dix-sept","Quai quatre-vingt-dix-sept","Quai quatre-vingt-sept","Quai soixante-sept"],ans:1,fb:"✅ Quai numéro quatre-vingt-dix-sept (97)."},
+  {q:"Dans l'annonce 3 — dans combien de temps part le train ?",en:"In announcement 3 — how soon does the train leave?",opts:["Cinq minutes","Dix minutes","Une minute","Deux minutes"],ans:3,fb:"✅ Le train part dans deux minutes — dépêchez-vous !"}
+];
+
+var DIALOGUES=[
+  {
+    title:'Dialogue 1 — Au guichet',sub:'Buying a ticket · Passenger & ticket agent',
+    lines:[
+      {spk:'Voyageur',fr:"Bonjour, je voudrais un aller-retour pour Lyon, s'il vous plaît.",en:"Hello, I would like a return ticket to Lyon, please."},
+      {spk:'Agent',fr:"En première ou deuxième classe ?",en:"In first or second class?"},
+      {spk:'Voyageur',fr:"Deuxième classe, s'il vous plaît. C'est combien ?",en:"Second class, please. How much is it?"},
+      {spk:'Agent',fr:"Quatre-vingt-dix euros, monsieur.",en:"Ninety euros, sir."},
+      {spk:'Voyageur',fr:"Et à quelle heure part le train ?",en:"And what time does the train leave?"},
+      {spk:'Agent',fr:"Il part à quatorze heures trente, voie sept. N'oubliez pas de composter votre billet.",en:"It leaves at 14h30, platform seven. Don't forget to validate your ticket."},
+      {spk:'Voyageur',fr:"Merci beaucoup. Où est le composteur ?",en:"Thank you very much. Where is the validation machine?"},
+      {spk:'Agent',fr:"Il est juste là, à l'entrée du quai, à droite.",en:"It's right there, at the entrance to the platform, on the right."}
+    ]
+  },
+  {
+    title:'Dialogue 2 — Entre voyageurs',sub:'Between passengers · Waiting room',
+    lines:[
+      {spk:'Amina',fr:"Excusez-moi, vous allez à Paris ?",en:"Excuse me, are you going to Paris?"},
+      {spk:'Julien',fr:"Oui, et vous aussi ?",en:"Yes, you too?"},
+      {spk:'Amina',fr:"Oui. Le train est en retard, non ?",en:"Yes. The train is delayed, isn't it?"},
+      {spk:'Julien',fr:"Oui, vingt minutes de retard à cause d'un incident technique.",en:"Yes, twenty minutes late because of a technical incident."},
+      {spk:'Amina',fr:"Oh non ! J'ai une correspondance à Lyon. Je vais la rater !",en:"Oh no! I have a connection in Lyon. I'm going to miss it!"},
+      {spk:'Julien',fr:"Ne vous inquiétez pas — allez voir au guichet, ils peuvent vous aider.",en:"Don't worry — go to the ticket window, they can help you."},
+      {spk:'Amina',fr:"Bonne idée. Merci beaucoup, monsieur !",en:"Good idea. Thank you very much, sir!"}
+    ]
+  },
+  {
+    title:'Dialogue 3 — Voyageur perdu',sub:'Lost traveller asking for help',
+    lines:[
+      {spk:'Voyageur',fr:"Pardon madame, où est le quai numéro quatre-vingt-deux ?",en:"Excuse me madam, where is platform eighty-two?"},
+      {spk:'Passante',fr:"C'est là-bas, au fond, à gauche après les escaliers.",en:"It's over there, at the end, to the left after the stairs."},
+      {spk:'Voyageur',fr:"Merci. Et la consigne, elle est où ?",en:"Thank you. And where is the left-luggage office?"},
+      {spk:'Passante',fr:"La consigne est au sous-sol, prenez l'escalier là-bas.",en:"The left-luggage is in the basement, take the stairs over there."},
+      {spk:'Voyageur',fr:"D'accord. Est-ce que le train pour Bordeaux est déjà arrivé ?",en:"OK. Has the train to Bordeaux already arrived?"},
+      {spk:'Passante',fr:"Je ne sais pas, regardez le tableau des départs là-bas.",en:"I don't know, look at the departures board over there."},
+      {spk:'Voyageur',fr:"Parfait, merci infiniment !",en:"Perfect, thank you so much!"}
+    ]
+  }
+];
+var DLG_ALL_LINES=[];
+DIALOGUES.forEach(function(d){DLG_ALL_LINES=DLG_ALL_LINES.concat(d.lines.map(function(l){return l.fr;}));});
+
+var DIALOG_QS=[
+  {fr:"Dans le dialogue 1 — combien coûte le billet ?",en:"In dialogue 1 — how much does the ticket cost?",type:'mcq',opts:["Soixante-dix euros","Quatre-vingt euros","Quatre-vingt-dix euros","Cent euros"],ans:2,fb:"✅ Quatre-vingt-dix euros (90€). Platform + price numbers are always tested in TEF!"},
+  {fr:"Dans le dialogue 1 — sur quelle voie part le train ?",en:"In dialogue 1 — which platform?",type:'mcq',opts:["Voie quatre","Voie six","Voie sept","Voie dix"],ans:2,fb:"✅ Voie sept — platform seven."},
+  {fr:"Dans le dialogue 2 — pourquoi Amina est-elle inquiète ?",en:"In dialogue 2 — why is Amina worried?",type:'mcq',opts:["Elle a perdu son billet","Elle a une correspondance à rater","Elle ne sait pas où est le quai","Son train est annulé"],ans:1,fb:"✅ Elle a une correspondance à Lyon et le train est en retard!"},
+  {fr:"Vrai ou faux ? Dans le dialogue 2, Julien dit qu'il va à Lyon.",en:"True or false? In dialogue 2, Julien says he is going to Lyon.",type:'tf',cor:false,fb:"❌ Faux ! Julien va à Paris, pas à Lyon. La correspondance à Lyon concerne Amina."},
+  {fr:"Dans le dialogue 3 — où est la consigne ?",en:"In dialogue 3 — where is the left-luggage?",type:'mcq',opts:["Au rez-de-chaussée","Au premier étage","Au sous-sol","À côté du guichet"],ans:2,fb:"✅ La consigne est au sous-sol (basement)."},
+  {fr:"Dans le dialogue 3 — comment le voyageur peut-il trouver les informations sur son train ?",en:"In dialogue 3 — how can the traveller find information about his train?",type:'mcq',opts:["En appelant la SNCF","En regardant le tableau des départs","En allant au guichet","En demandant au contrôleur"],ans:1,fb:"✅ La passante lui dit de regarder le tableau des départs — the departures board."},
+  {fr:"Quel numéro de quai le voyageur cherche-t-il dans le dialogue 3 ?",en:"Which platform number is the traveller looking for in dialogue 3?",type:'mcq',opts:["Quatre-vingt-douze","Soixante-douze","Quatre-vingt-deux","Quatre-vingt-douze"],ans:2,fb:"✅ Le quai numéro quatre-vingt-deux (82)."},
+  {fr:"Dans le dialogue 1 — que doit faire le voyageur avant de monter dans le train ?",en:"In dialogue 1 — what must the passenger do before boarding?",type:'write',sc:"Il doit...",ans:"composter",h:"The agent reminds him of something important with his ticket."},
+  {fr:"Vrai ou faux ? Dans le dialogue 2, Julien conseille à Amina d'aller au guichet.",en:"True or false? In dialogue 2, Julien advises Amina to go to the ticket window.",type:'tf',cor:true,fb:"✅ Vrai ! Julien dit : allez voir au guichet, ils peuvent vous aider."}
+];
+
+var BEST_RESP=[
+  {
+    fr:"Le contrôleur dit : 'Votre billet, s'il vous plaît !'",
+    hint:"The ticket inspector is asking for your ticket.",
+    opts:[
+      "Je ne parle pas français.",
+      "Voilà mon billet, monsieur.",
+      "Je voudrais un café, s'il vous plaît.",
+      "Le train est en retard ?"
+    ],ans:1,fb:"✅ Voilà mon billet — you hand over your ticket. Always keep it accessible on the train!"
+  },
+  {
+    fr:"L'agent dit : 'Première ou deuxième classe ?'",
+    hint:"The agent is asking about your class preference.",
+    opts:[
+      "Oui, merci.",
+      "Le train part à quelle heure ?",
+      "Deuxième classe, s'il vous plaît.",
+      "Je ne sais pas où est le quai."
+    ],ans:2,fb:"✅ Deuxième classe — you specify the class. This is exactly the response the TEF expects!"
+  },
+  {
+    fr:"Une passagère dit : 'Excusez-moi, vous savez où est la salle d'attente ?'",
+    hint:"A fellow passenger is asking for directions to the waiting room.",
+    opts:[
+      "Je cherche aussi le guichet.",
+      "C'est là-bas, à gauche.",
+      "Le train est en retard.",
+      "Mon billet coûte soixante euros."
+    ],ans:1,fb:"✅ C'est là-bas, à gauche — giving directions is a core TEF interaction skill!"
+  },
+  {
+    fr:"L'annonce dit : 'Le train numéro quatre-vingt-deux est à quai.'",
+    hint:"An announcement says your train has arrived at the platform.",
+    opts:[
+      "Je vais au restaurant.",
+      "Je cherche un hôtel près de la gare.",
+      "Je prends mes bagages et je vais au quai.",
+      "Je téléphone à ma famille."
+    ],ans:2,fb:"✅ Je prends mes bagages et je vais au quai — the logical, natural response to your train arriving!"
+  },
+  {
+    fr:"L'agent dit : 'Il y a un retard de vingt minutes.'",
+    hint:"The agent tells you there is a 20-minute delay.",
+    opts:[
+      "Je voudrais un aller-retour.",
+      "D'accord, merci de me prévenir.",
+      "Je n'ai pas de billet.",
+      "Le quai est à droite ?"
+    ],ans:1,fb:"✅ D'accord, merci de me prévenir — polite, natural acknowledgement of the delay."
+  },
+  {
+    fr:"L'agent demande : 'Vous avez composté votre billet ?'",
+    hint:"The agent asks if you have validated your ticket.",
+    opts:[
+      "Oui, je l'ai composté à l'entrée du quai.",
+      "Je voudrais changer mon billet.",
+      "Mon train part voie sept.",
+      "Je cherche la consigne."
+    ],ans:0,fb:"✅ Oui, je l'ai composté — perfect! You validated it and you confirm that to the agent."
+  },
+  {
+    fr:"Un voyageur dit : 'Je n'ai pas de correspondance — et vous ?'",
+    hint:"A passenger asks if you have a connecting train.",
+    opts:[
+      "Non, je vais directement à Marseille.",
+      "Le billet coûte cent euros.",
+      "La gare ferme à vingt et une heures.",
+      "Je suis en première classe."
+    ],ans:0,fb:"✅ Non, je vais directement à Marseille — you answer their question with your destination!"
+  },
+  {
+    fr:"L'annonce dit : 'Pensez à composter votre billet avant de monter à bord !'",
+    hint:"The announcement reminds you to validate your ticket.",
+    opts:[
+      "Je cherche le restaurant de la gare.",
+      "Je compose mon billet au composteur.",
+      "Je demande un aller-retour.",
+      "J'attends dans la salle d'attente."
+    ],ans:1,fb:"✅ Je compose mon billet au composteur — the direct action you take after this announcement!"
+  }
+];
+
+var SIM_QS=[
+  {q:"Bonjour ! Vous désirez ?",hint:"You want a one-way ticket to Paris.",model:"Bonjour ! Je voudrais un aller simple pour Paris, s'il vous plaît."},
+  {q:"En première ou deuxième classe ?",hint:"Choose a class.",model:"Deuxième classe, s'il vous plaît."},
+  {q:"C'est soixante-quinze euros. Vous payez comment ?",hint:"You pay by card.",model:"Je paie par carte, s'il vous plaît."},
+  {q:"Le train part à quelle heure ?",hint:"You don't know — ask the agent.",model:"Pardon, à quelle heure part le prochain train pour Paris ?"},
+  {q:"Le train part à dix-sept heures quinze, voie quatre-vingt-deux.",hint:"Confirm what you heard.",model:"D'accord, voie quatre-vingt-deux. Merci beaucoup !"},
+  {q:"N'oubliez pas de composter votre billet !",hint:"You haven't done it yet — ask where.",model:"Oui, bien sûr. Où est le composteur, s'il vous plaît ?"},
+  {q:"Il est à l'entrée du quai, à droite. Il y a autre chose ?",hint:"You also need to store your luggage.",model:"Oui — où est la consigne, s'il vous plaît ?"},
+  {q:"Pardon — votre billet, s'il vous plaît !",hint:"The ticket inspector wants to see your ticket.",model:"Voilà mon billet, monsieur. Le voici."},
+  {q:"Merci. Vous allez jusqu'à Paris ?",hint:"Confirm your destination.",model:"Oui, je vais directement à Paris, sans correspondance."},
+  {q:"Il y a un retard de dix minutes à cause des travaux.",hint:"Acknowledge the delay politely.",model:"D'accord, merci de me prévenir. Dix minutes, ce n'est pas grave."},
+  {q:"Est-ce que vous avez une correspondance ?",hint:"You have a connection in Paris.",model:"Oui, j'ai une correspondance à Paris Gare du Nord pour Londres."},
+  {q:"Bonne continuation et bon voyage !",hint:"Respond warmly to the well-wish.",model:"Merci beaucoup ! Bonne journée à vous aussi !"}
+];
+var SIM_SPK=SIM_QS.map(function(q){return q.q;});
+
+var EXTRACT_TEXT="Bonjour à tous. Bienvenue à la gare de Lyon. Mon nom est Marc Dupont et je suis contrôleur à la SNCF depuis vingt ans. Ce matin, je travaille sur le train numéro soixante-quinze à destination de Marseille. Le train part à neuf heures quarante-cinq, voie quatre-vingt-dix. Il y a cent soixante voyageurs dans ce train aujourd'hui. Si vous avez besoin d'aide, trouvez-moi dans la voiture numéro deux. Bon voyage à tous !";
+
+var EXTRACT_QS=[
+  {fr:"Quelle est la profession de Marc Dupont ?",en:"What is Marc Dupont's job?",type:'mcq',opts:["Agent de guichet","Contrôleur SNCF","Conducteur de train","Voyageur"],ans:1,fb:"✅ Il est contrôleur à la SNCF."},
+  {fr:"Depuis combien d'années travaille-t-il à la SNCF ?",en:"How many years has he worked at SNCF?",type:'mcq',opts:["Quinze ans","Vingt ans","Dix ans","Trente ans"],ans:1,fb:"✅ Vingt ans (20 years)."},
+  {fr:"Quel est le numéro du train ?",en:"What is the train number?",type:'mcq',opts:["Soixante-cinq","Soixante-quinze","Quatre-vingt-cinq","Cent quinze"],ans:1,fb:"✅ Le train numéro soixante-quinze (75)."},
+  {fr:"Sur quelle voie part le train ?",en:"Which platform does the train leave from?",type:'mcq',opts:["Voie quatre-vingts","Voie quatre-vingt-dix","Voie soixante-dix","Voie cent"],ans:1,fb:"✅ Voie quatre-vingt-dix (90)."},
+  {fr:"Combien de voyageurs y a-t-il dans le train ?",en:"How many passengers are on the train?",type:'mcq',opts:["Cent cinquante","Cent soixante","Cent soixante-quinze","Deux cents"],ans:1,fb:"✅ Cent soixante voyageurs (160 passengers)."}
+];
+
+var FINAL_QS=[
+  {q:"'Composter son billet' means:",opts:["To buy a ticket","To validate/stamp a ticket","To lose a ticket","To exchange a ticket"],ans:1},
+  {q:"How do you say 82 in French?",opts:["Soixante-douze","Quatre-vingt-deux","Quatre-vingt-douze","Quatre-vingt-douze"],ans:1},
+  {q:"'Il y a un retard de vingt minutes' means:",opts:["The train is 20 minutes early","The train is on time","The train is 20 minutes late","The train is cancelled"],ans:2},
+  {q:"How do you say 97 in French?",opts:["Soixante-dix-sept","Quatre-vingt-sept","Quatre-vingt-dix-sept","Soixante-dix-neuf"],ans:2},
+  {q:"'La correspondance' in a train context means:",opts:["A letter","A connecting train","A delay","A platform"],ans:1},
+  {q:"What does 'un aller-retour' mean?",opts:["A one-way ticket","A refund","A return ticket","A seat reservation"],ans:2},
+  {q:"'La voie' at a train station means:",opts:["The waiting room","The ticket window","The track / platform","The timetable"],ans:2},
+  {q:"How do you say 200 in French?",opts:["Deux cent","Deux cents","Deux centimes","Deux centaines"],ans:1},
+  {q:"What does 'Pensez à composter votre billet' mean?",opts:["Please buy your ticket","Remember to validate your ticket","Check your ticket time","Keep your ticket safe"],ans:1},
+  {q:"'La consigne' is:",opts:["An announcement","Left-luggage / luggage storage","The ticket window","The departure board"],ans:1}
+];
+
+var FREE_STARTERS=["Je suis à la gare de...","Mon train part à..., voie...","Le billet coûte... euros.","Il y a un retard de...",
+  "J'achète un aller simple / aller-retour pour...","Je cherche le quai numéro...","Le contrôleur demande...","Je dois composter...","J'ai une correspondance à...","Enfin, le train arrive à..."];
+
+// VOICE
+function loadFrVoice(){return new Promise(function(res){var t=function(n){var vs=speechSynthesis.getVoices();var v=vs.find(function(v){return v.lang==='fr-FR'&&/thomas|nicolas/i.test(v.name);})||vs.find(function(v){return v.lang==='fr-FR'&&/google/i.test(v.name);})||vs.find(function(v){return v.lang==='fr-FR';})||vs.find(function(v){return v.lang.startsWith('fr');});if(v||n<=0)res(v||null);else setTimeout(function(){t(n-1);},300);};speechSynthesis.onvoiceschanged=function(){t(0);};t(10);});}
+window.addEventListener('load',function(){loadFrVoice().then(function(v){frVoice=v;});});
+
+function spk(t,btn,rate){if(!t||!t.trim())return;speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);if(frVoice)u.voice=frVoice;u.lang='fr-FR';u.rate=rate||0.82;u.pitch=0.95;if(btn&&btn.textContent){var o=btn.textContent;btn.textContent='⏸...';u.onend=function(){btn.textContent=o;};}speechSynthesis.speak(u);}
+
+// RECORDING
+function dRec(rId,pbId){return navigator.mediaDevices.getUserMedia({audio:true}).then(function(st){var ch=[];var mr=new MediaRecorder(st);mRecs[rId]=mr;mr.ondataavailable=function(e){if(e.data.size>0)ch.push(e.data);};mr.onstop=function(){blobs[pbId]=new Blob(ch,{type:'audio/webm'});st.getTracks().forEach(function(t){t.stop();});var pb=document.getElementById(pbId);if(pb)pb.classList.add('show');spkN++;showCoach('Recorded! Press play to compare.',3000);};mr.start();showCoach('Recording... speak clearly!',0);return mr;}).catch(function(){showCoach('Mic unavailable.',3000);return null;});}
+function pBlob(id){if(!blobs[id])return;new Audio(URL.createObjectURL(blobs[id])).play();}
+
+// STT
+function startSTT(ansId,liveId,btnId){var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){showCoach('Speech recognition not available — try Chrome on desktop.',5000);return;}if(sttActive){sttRecog&&sttRecog.stop();sttActive=false;var btn=document.getElementById(btnId);if(btn){btn.textContent='🎤 Speak';btn.classList.remove('on');}return;}sttRecog=new SR();sttRecog.lang='fr-FR';sttRecog.continuous=false;sttRecog.interimResults=true;sttActive=true;var btn2=document.getElementById(btnId);if(btn2){btn2.textContent='⏹ Stop';btn2.classList.add('on');}var lb=document.getElementById(liveId);if(lb)lb.parentElement.style.display='block';sttRecog.onresult=function(e){var t=Array.from(e.results).map(function(r){return r[0].transcript;}).join('');if(lb)lb.textContent=t;var ai=document.getElementById(ansId);if(ai)ai.value=t;};sttRecog.onend=function(){sttActive=false;if(btn2){btn2.textContent='🎤 Speak';btn2.classList.remove('on');}spkN++;};sttRecog.onerror=function(){sttActive=false;if(btn2){btn2.textContent='🎤 Speak';btn2.classList.remove('on');}};sttRecog.start();}
+
+// MOOD
+function selMood(el,isMoodEnd){var row=isMoodEnd?'mERow':'mSRow';document.getElementById(row).querySelectorAll('.moodBtn').forEach(function(b){b.classList.remove('sel');});el.classList.add('sel');if(isMoodEnd)mE=el.dataset.emood||el.dataset.mood;else mS=el.dataset.mood;}
+
+// NAV
+function goSec(n){document.getElementById('sec'+curSec).classList.remove('show');curSec=n;var s=document.getElementById('sec'+n);if(s)s.classList.add('show');window.scrollTo({top:0,behavior:'smooth'});updDots();updProg();}
+function buildDots(){document.getElementById('dotsW').innerHTML=[1,2,3,4,5,6,7].map(function(i){return '<div class="dot'+(i===1?' active':'')+'" id="dot'+i+'">'+i+'</div>';}).join('');}
+function updDots(){for(var i=1;i<=7;i++){var d=document.getElementById('dot'+i);if(d)d.className='dot'+(i<curSec?' done':i===curSec?' active':'');}}
+function buildPS(){document.getElementById('pSegs').innerHTML=[1,2,3,4,5,6,7].map(function(i){return '<div class="pSeg" id="ps'+i+'"></div>';}).join('');}
+function updProg(){for(var i=1;i<=7;i++){var s=document.getElementById('ps'+i);if(s)s.className='pSeg'+(i<curSec?' done':i===curSec?' active':'');}}
+
+// RENDER VOCAB
+function renderVocab(){
+  var html='';
+  VOCAB.forEach(function(v,i){
+    html+='<div class="vcCard vcItem" data-idx="'+i+'">'
+      +'<span class="vcEmo">'+v.emo+'</span>'
+      +'<span class="vcFr">'+v.fr+'</span>'
+      +'<span class="vcEn" id="ven'+i+'">'+v.en+'</span>'
+      +'<span class="vcIpa">'+v.ipa+'</span>'
+      +'<button class="revToggle" data-enid="ven'+i+'" style="font-size:.61rem;color:var(--br3);cursor:pointer;font-weight:700;display:block;background:none;border:none;padding:0;font-family:Lato,sans-serif">🇬🇧 Reveal</button>'
+      +'<div class="audRow" style="justify-content:center;margin-top:4px;gap:3px">'
+      +'<button class="bBr_ vcSpk" data-idx="'+i+'" style="min-height:27px;padding:0 7px;font-size:.6rem">🔊</button>'
+      +'<button class="bRec vcRec" data-idx="'+i+'" id="vr'+i+'" style="min-height:27px;padding:0 7px;font-size:.6rem">🎤</button>'
+      +'<button class="bPb vcPb" data-idx="'+i+'" id="vp'+i+'" style="min-height:27px;padding:0 7px;font-size:.6rem">▶️</button>'
+      +'</div></div>';
+  });
+  document.getElementById('vocabCards').innerHTML=html;
+  document.getElementById('vocabCards').addEventListener('click',function(ev){
+    var btn=ev.target.closest('button,.revToggle');if(!btn)return;
+    var idx=btn.dataset.idx;
+    if(btn.classList.contains('vcSpk')){spk(VOCAB_SPK[idx],btn);}
+    if(btn.classList.contains('vcRec')){dRec('vr'+idx,'vp'+idx).then(function(mr){if(mr){var el=document.getElementById('vr'+idx);if(el){el.textContent='⏹ Stop';el.classList.add('on');mr.onstop=function(){blobs['vp'+idx]=new Blob([],{type:'audio/webm'});el.textContent='🎤';el.classList.remove('on');document.getElementById('vp'+idx).classList.add('show');spkN++;};}}})}
+    if(btn.classList.contains('vcPb')){pBlob('vp'+idx);}
+    if(btn.classList.contains('revToggle')){var en=document.getElementById(btn.dataset.enid);if(en){en.classList.toggle('rev');btn.textContent=en.classList.contains('rev')?'🇫🇷 Hide':'🇬🇧 Reveal';}}
+  });
+}
+
+// RENDER CHUNKS
+function renderChunks(){
+  var html='';
+  CHUNKS.forEach(function(c,i){
+    html+='<div class="chunkBox">'
+      +'<div class="chunkFr">'+c.fr+'</div>'
+      +'<button class="revToggle chunkRevBtn" data-cidx="'+i+'" style="font-size:.64rem;color:var(--br3);cursor:pointer;font-weight:700;background:none;border:none;padding:0;margin-bottom:5px;font-family:Lato,sans-serif">🇬🇧 Show English</button>'
+      +'<div class="chunkEn" id="cen'+i+'">'+c.en+'</div>'
+      +'<div class="chunkEx" id="cex'+i+'">💡 '+c.ex+'</div>'
+      +'<div class="audRow" style="gap:5px;margin-top:7px">'
+      +'<button class="bBr_ chkSpk" data-cidx="'+i+'" style="min-height:32px;font-size:.73rem">🔊 Listen</button>'
+      +'<button class="bOut chkSlow" data-cidx="'+i+'" style="min-height:32px;font-size:.73rem">🐢 Slow</button>'
+      +'<button class="bRec chkRec" data-cidx="'+i+'" id="cr'+i+'" style="min-height:32px;font-size:.73rem">🎤 Repeat</button>'
+      +'<button class="bPb chkPb" data-cidx="'+i+'" id="cp'+i+'" style="min-height:32px;font-size:.73rem">▶️</button>'
+      +'<button class="bOut chkEx" data-cidx="'+i+'" style="min-height:32px;font-size:.71rem">📖 Example</button>'
+      +'</div></div>';
+  });
+  document.getElementById('chunkCards').innerHTML=html;
+  document.getElementById('chunkCards').addEventListener('click',function(ev){
+    var btn=ev.target.closest('button');if(!btn)return;
+    var idx=btn.dataset.cidx;
+    if(btn.classList.contains('chkSpk'))spk(CHUNK_SPK[idx],btn);
+    if(btn.classList.contains('chkSlow'))spk(CHUNK_SPK[idx],btn,.62);
+    if(btn.classList.contains('chkRec'))dRec('cr'+idx,'cp'+idx);
+    if(btn.classList.contains('chkPb'))pBlob('cp'+idx);
+    if(btn.classList.contains('chkEx')){var ex=document.getElementById('cex'+idx);if(ex){ex.style.display=ex.style.display==='block'?'none':'block';}}
+    if(btn.classList.contains('chunkRevBtn')){var en=document.getElementById('cen'+idx);if(en){en.classList.toggle('rev');btn.textContent=en.classList.contains('rev')?'🇫🇷 Hide English':'🇬🇧 Show English';}}
+  });
+}
+
+// VOCAB QUIZ
+function renderVocabQuiz(){
+  var qs=[
+    {q:"What is 'le quai'?",opts:["Waiting room","Platform","Ticket window","Left-luggage"],ans:1},
+    {q:"'La correspondance' means:",opts:["Connection/transfer","Delay","Timetable","Announcement"],ans:0},
+    {q:"What does 'composter' mean?",opts:["To buy","To check","To validate","To cancel"],ans:2},
+    {q:"'L'aller-retour' is:",opts:["One-way ticket","Return ticket","First class","Platform number"],ans:1},
+    {q:"'Le retard' means:",opts:["Arrival","Platform","Delay","Timetable"],ans:2},
+    {q:"'La consigne' is:",opts:["The announcement","Left-luggage office","The waiting room","The ticket office"],ans:1}
+  ];
+  var html='';
+  qs.forEach(function(q,i){
+    html+='<div class="mcqW"><div style="font-size:.59rem;font-weight:700;color:var(--br2);text-transform:uppercase;margin-bottom:6px;font-family:Cinzel,serif">Q'+(i+1)+'</div>'
+      +'<div class="mcqQ">'+q.q+'</div>'
+      +q.opts.map(function(o,j){return '<div class="mcqO vqOpt" data-qi="'+i+'" data-oi="'+j+'" data-ans="'+q.ans+'"><div style="width:20px;height:20px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:.59rem;font-weight:800;flex-shrink:0;color:var(--mut)">'+String.fromCharCode(65+j)+'</div>'+o+'</div>';}).join('')
+      +'<div class="mcqFb" id="vqfb'+i+'"></div></div>';
+  });
+  document.getElementById('vocabQuiz').innerHTML=html;
+  document.getElementById('vocabQuiz').addEventListener('click',function(ev){
+    var opt=ev.target.closest('.vqOpt');if(!opt)return;
+    var qi=opt.dataset.qi,oi=parseInt(opt.dataset.oi),ans=parseInt(opt.dataset.ans);
+    if(vqDone[qi]!==undefined)return;
+    vqDone[qi]=oi;
+    document.querySelectorAll('.vqOpt[data-qi="'+qi+'"]').forEach(function(el){el.classList.add('dis');if(parseInt(el.dataset.oi)===ans)el.classList.add('co');else if(parseInt(el.dataset.oi)===oi&&oi!==ans)el.classList.add('wo');});
+    var fb=document.getElementById('vqfb'+qi);if(fb){fb.className='mcqFb show';fb.style.cssText=oi===ans?'background:var(--gnb);color:var(--gn)':'background:var(--rdb);color:var(--rd)';fb.textContent=oi===ans?'Correct!':'Review the vocabulary cards.';}
+    if(oi===ans)confetti();
+  });
+}
+
+// ANNOUNCEMENTS
+function renderAnnouncements(){
+  var html='';
+  ANNOUNCEMENTS.forEach(function(a,i){
+    html+='<div class="announceBoard">'
+      +'<div class="announceLbl">📢 '+a.title+'</div>'
+      +'<div class="announceText" id="ant'+i+'">'+a.text.replace(/\b(quatorze|dix|vingt|soixante|quatre-vingt[a-z-]*|cent[a-z ]*|voie [a-z- ]+|quai [a-z- ]+|numéro [a-z-]+)/gi,function(m){return '<strong>'+m+'</strong>'})+'</div>'
+      +'<div class="announceEn" id="ane'+i+'">'+a.en+'</div>'
+      +'<div class="audRow" style="margin-top:11px">'
+      +'<button class="bGl_ annSpk" data-idx="'+i+'" style="min-height:36px;font-size:.76rem">🔊 Listen to announcement</button>'
+      +'<button class="bOut annSlow" data-idx="'+i+'" style="min-height:36px;font-size:.76rem">🐢 Slow</button>'
+      +'<button class="bRec annRec" data-idx="'+i+'" id="ar'+i+'" style="min-height:36px;font-size:.76rem">🎤 Read aloud</button>'
+      +'<button class="bPb annPb" data-idx="'+i+'" id="ap'+i+'" style="min-height:36px;font-size:.76rem">▶️</button>'
+      +'<button class="bOut annRev" data-idx="'+i+'" style="min-height:36px;font-size:.73rem">🇬🇧 Show English</button>'
+      +'</div></div>';
+  });
+  document.getElementById('announceSection').innerHTML=html;
+  document.getElementById('announceSection').addEventListener('click',function(ev){
+    var btn=ev.target.closest('button');if(!btn)return;
+    var idx=btn.dataset.idx;
+    if(btn.classList.contains('annSpk'))spk(ANN_SPK[idx],btn,.78);
+    if(btn.classList.contains('annSlow'))spk(ANN_SPK[idx],btn,.55);
+    if(btn.classList.contains('annRec'))dRec('ar'+idx,'ap'+idx);
+    if(btn.classList.contains('annPb'))pBlob('ap'+idx);
+    if(btn.classList.contains('annRev')){var en=document.getElementById('ane'+idx);if(en){en.classList.toggle('rev');btn.textContent=en.classList.contains('rev')?'🇫🇷 Hide English':'🇬🇧 Show English';}}
+  });
+}
+
+function renderAnnounceQs(){
+  var html='';
+  ANNOUNCE_QS.forEach(function(q,i){
+    html+='<div class="mcqW"><div class="mcqQ">'+q.q+'<br><span style="font-size:.71rem;color:var(--mut);font-style:italic">'+q.en+'</span></div>'
+      +'<button class="bBr_ aqAud" data-idx="'+i+'" style="min-height:28px;font-size:.68rem;padding:0 10px;margin-bottom:8px">🔊 Hear question</button>'
+      +ANNOUNCE_QS[i].opts.map(function(o,j){return '<div class="mcqO aqOpt" data-qi="'+i+'" data-oi="'+j+'" data-ans="'+q.ans+'"><div style="width:20px;height:20px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:.59rem;font-weight:800;flex-shrink:0;color:var(--mut)">'+String.fromCharCode(65+j)+'</div>'+o+'</div>';}).join('')
+      +'<div class="mcqFb" id="aqfb'+i+'"></div></div>';
+  });
+  document.getElementById('announceQs').innerHTML=html;
+  var aqContainer=document.getElementById('announceQs');
+  aqContainer.addEventListener('click',function(ev){
+    var opt=ev.target.closest('.aqOpt,.aqAud');if(!opt)return;
+    if(opt.classList.contains('aqAud')){spk(ANNOUNCE_QS[opt.dataset.idx].q,opt);return;}
+    var qi=opt.dataset.qi,oi=parseInt(opt.dataset.oi),ans=parseInt(opt.dataset.ans);
+    if(aqDone[qi]!==undefined)return;
+    aqDone[qi]=oi;
+    document.querySelectorAll('.aqOpt[data-qi="'+qi+'"]').forEach(function(el){el.classList.add('dis');if(parseInt(el.dataset.oi)===ans)el.classList.add('co');else if(parseInt(el.dataset.oi)===oi&&oi!==ans)el.classList.add('wo');});
+    var fb=document.getElementById('aqfb'+qi);if(fb){fb.className='mcqFb show';fb.style.cssText=oi===ans?'background:var(--gnb);color:var(--gn)':'background:var(--rdb);color:var(--rd)';fb.innerHTML=ANNOUNCE_QS[qi].fb;}
+    if(oi===ans)confetti();
+  });
+}
+
+// NUMBERS
+function renderNumbers(){
+  var html='';
+  NUMBERS.forEach(function(n,i){
+    html+='<div class="numCard numItem" data-idx="'+i+'">'
+      +'<div class="numN">'+n.n+'</div>'
+      +'<div style="flex:1"><div class="numFr">'+n.fr+'</div>'
+      +'<div class="numNote">'+n.note+'</div>'
+      +'<div class="numEn" id="nuen'+i+'">= '+n.en+'</div>'
+      +'<button class="revToggle numRev" data-nidx="'+i+'" style="font-size:.61rem;color:var(--br3);cursor:pointer;font-weight:700;background:none;border:none;padding:0;font-family:Lato,sans-serif">🇬🇧 Reveal</button>'
+      +'</div>'
+      +'<button class="bBr_ numSpk" data-idx="'+i+'" style="min-height:28px;padding:0 8px;font-size:.63rem">🔊</button>'
+      +'</div>';
+  });
+  document.getElementById('numCards').innerHTML=html;
+  document.getElementById('numCards').addEventListener('click',function(ev){
+    var btn=ev.target.closest('button,.numItem');if(!btn)return;
+    var idx=btn.dataset.idx||btn.dataset.nidx;
+    if(btn.classList.contains('numSpk'))spk(NUM_SPK[idx],btn);
+    if(btn.classList.contains('numRev')){var el=document.getElementById('nuen'+idx);if(el){el.classList.toggle('rev');btn.textContent=el.classList.contains('rev')?'🇫🇷 Hide':'🇬🇧 Reveal';}}
+    if(btn.classList.contains('numItem')&&!ev.target.closest('button')){spk(NUM_SPK[btn.dataset.idx],null);}
+  });
+}
+
+function renderNumEx(){
+  var exs=[
+    {s:"Le train est sur la voie ___. (82)",ans:"quatre-vingt-deux",hint:"82"},
+    {s:"Le billet coûte ___ euros. (75)",ans:"soixante-quinze",hint:"75"},
+    {s:"Il y a ___ minutes de retard. (20 — spell it out)",ans:"vingt",hint:"20"},
+    {s:"Le quai numéro ___. (97)",ans:"quatre-vingt-dix-sept",hint:"97"},
+    {s:"Il y a ___ voyageurs dans ce train. (100)",ans:"cent",hint:"100"}
+  ];
+  var html='';
+  exs.forEach(function(ex,i){
+    html+='<div style="background:var(--bg3);border:1.5px solid var(--bdr2);border-radius:var(--rsm);padding:11px;margin-bottom:9px">'
+      +'<div style="font-size:.59rem;font-weight:700;color:var(--pu);text-transform:uppercase;margin-bottom:4px;font-family:Cinzel,serif">Hint: '+ex.hint+'</div>'
+      +'<div style="font-size:.87rem;color:var(--txt);font-family:Cardo,serif;line-height:2">'
+      +ex.s.replace('___','<input class="flInp numExInp" id="nex'+i+'" placeholder="..." autocomplete="off" style="min-width:180px">')
+      +'</div></div>';
+  });
+  document.getElementById('numEx').innerHTML=html;
+}
+
+function renderNumDict(){
+  var items=[
+    {tx:"soixante-quinze",h:"75 — 60+15. Common ticket price!"},
+    {tx:"quatre-vingt-deux",h:"82 — 4x20+2. Common platform number!"},
+    {tx:"quatre-vingt-dix-sept",h:"97 — 4x20+17. High number for platforms."},
+    {tx:"cent soixante",h:"160 — 100+60. Number of passengers."}
+  ];
+  var html='<div class="badge bPu" style="margin-top:14px">🎧 Number Dictation — type the number in French words</div>';
+  items.forEach(function(item,i){
+    html+='<div class="dictItem">'
+      +'<div class="dictLvl">Number Dictation '+(i+1)+'</div>'
+      +'<div class="audRow" style="margin-bottom:8px">'
+      +'<button class="bBr_ ndSpk" data-idx="'+i+'" style="min-height:34px;font-size:.74rem">🔊 Hear number</button>'
+      +'<button class="bOut ndSlow" data-idx="'+i+'" style="min-height:34px;font-size:.74rem">🐢 Slow</button>'
+      +'</div>'
+      +'<input class="dictInp" id="nd'+i+'" placeholder="Write the number in French words..." autocorrect="off" autocomplete="off" spellcheck="false">'
+      +'<div class="dictFb" id="ndf'+i+'"></div>'
+      +'<div class="dictReveal" id="ndr'+i+'">'+item.tx+'<br><span style="font-size:.73rem;color:var(--mut)">'+item.h+'</span></div>'
+      +'<div class="audRow" style="gap:5px;margin-top:6px">'
+      +'<button class="bBr_ ndCheck" data-idx="'+i+'" style="min-height:32px;font-size:.72rem">✅ Check</button>'
+      +'<button class="bOut ndReveal" data-idx="'+i+'" style="min-height:32px;font-size:.72rem">👁 Reveal</button>'
+      +'<button class="redoB ndRedo" data-idx="'+i+'" style="min-height:32px">🔄</button>'
+      +'</div></div>';
+  });
+  document.getElementById('numDictation').innerHTML=html;
+  var ND_ITEMS=[{tx:"soixante-quinze",h:"75"},{tx:"quatre-vingt-deux",h:"82"},{tx:"quatre-vingt-dix-sept",h:"97"},{tx:"cent soixante",h:"160"}];
+  document.getElementById('numDictation').addEventListener('click',function(ev){
+    var btn=ev.target.closest('button');if(!btn)return;
+    var idx=btn.dataset.idx;
+    if(btn.classList.contains('ndSpk'))spk(ND_ITEMS[idx].tx,btn);
+    if(btn.classList.contains('ndSlow'))spk(ND_ITEMS[idx].tx,btn,.58);
+    if(btn.classList.contains('ndCheck')){
+      var v=document.getElementById('nd'+idx).value.trim().toLowerCase().replace(/-/g,' ');
+      var ans=ND_ITEMS[idx].tx.toLowerCase().replace(/-/g,' ');
+      var ok=v===ans||v.includes(ans.split(' ')[0]);
+      document.getElementById('nd'+idx).className='dictInp '+(ok?'ok':'bad');
+      var fb=document.getElementById('ndf'+idx);fb.className='dictFb show';fb.style.cssText=ok?'background:var(--gnb);color:var(--gn)':'background:var(--rdb);color:var(--rd)';
+      fb.textContent=ok?'Correct! '+ND_ITEMS[idx].tx:'Correct form: '+ND_ITEMS[idx].tx;
+      if(ok)confetti();
+    }
+    if(btn.classList.contains('ndReveal')){document.getElementById('ndr'+idx).classList.toggle('show');}
+    if(btn.classList.contains('ndRedo')){document.getElementById('nd'+idx).value='';document.getElementById('nd'+idx).className='dictInp';document.getElementById('ndf'+idx).classList.remove('show');}
+  });
+}
+
+// DIALOGUES
+function renderDialogues(){
+  var html='';
+  DIALOGUES.forEach(function(dlg,di){
+    html+='<div style="margin-bottom:14px">'
+      +'<div class="badge bBr">💬 '+dlg.title+'<br><span style="font-size:.62rem;font-weight:400;font-family:Lato,sans-serif;color:var(--mut)">'+dlg.sub+'</span></div>'
+      +'<div id="dlgWrap'+di+'">';
+    dlg.lines.forEach(function(line,li){
+      var lineIdx=0;DIALOGUES.slice(0,di).forEach(function(d){lineIdx+=d.lines.length;});lineIdx+=li;
+      html+='<div class="dlgBox">'
+        +'<div class="dlgSpk">'+line.spk+'</div>'
+        +'<div class="dlgFr" id="dlgfr'+di+'_'+li+'">'+line.fr+'</div>'
+        +'<button class="revToggle dlgRevBtn" data-di="'+di+'" data-li="'+li+'" style="font-size:.64rem;color:var(--br3);cursor:pointer;font-weight:700;background:none;border:none;padding:0;font-family:Lato,sans-serif">🇬🇧 Show English</button>'
+        +'<div class="dlgEn" id="dlgen'+di+'_'+li+'">'+line.en+'</div>'
+        +'<div class="audRow" style="gap:3px;margin-top:5px">'
+        +'<button class="bBr_ dlgSpk" data-di="'+di+'" data-li="'+li+'" style="min-height:28px;font-size:.67rem;padding:0 9px">🔊</button>'
+        +'<button class="bRec dlgRec" data-di="'+di+'" data-li="'+li+'" id="dlgr'+di+'_'+li+'" style="min-height:28px;font-size:.67rem;padding:0 8px">🎤</button>'
+        +'<button class="bPb dlgPb" data-di="'+di+'" data-li="'+li+'" id="dlgp'+di+'_'+li+'" style="min-height:28px;font-size:.67rem;padding:0 8px">▶️</button>'
+        +'</div></div>';
+    });
+    html+='</div>'
+      +'<button class="bBr_ dlgFullSpk" data-di="'+di+'" style="min-height:34px;font-size:.74rem;margin-top:6px">🔊 Listen to full dialogue '+( di+1)+'</button>'
+      +'<button class="bOut dlgSlowSpk" data-di="'+di+'" style="min-height:34px;font-size:.74rem;margin-top:6px">🐢 Slow</button>'
+      +'</div>';
+  });
+  document.getElementById('dialogSection').innerHTML=html;
+  document.getElementById('dialogSection').addEventListener('click',function(ev){
+    var btn=ev.target.closest('button,.revToggle');if(!btn)return;
+    var di=btn.dataset.di,li=btn.dataset.li;
+    if(btn.classList.contains('dlgSpk'))spk(DIALOGUES[di].lines[li].fr,btn);
+    if(btn.classList.contains('dlgRec'))dRec('dlgr'+di+'_'+li,'dlgp'+di+'_'+li);
+    if(btn.classList.contains('dlgPb'))pBlob('dlgp'+di+'_'+li);
+    if(btn.classList.contains('dlgRevBtn')){var en=document.getElementById('dlgen'+di+'_'+li);if(en){en.classList.toggle('rev');btn.textContent=en.classList.contains('rev')?'🇫🇷 Hide English':'🇬🇧 Show English';}}
+    if(btn.classList.contains('dlgFullSpk')){var txt=DIALOGUES[di].lines.map(function(l){return l.spk+': '+l.fr;}).join('. ');spk(txt,btn);}
+    if(btn.classList.contains('dlgSlowSpk')){var txt2=DIALOGUES[di].lines.map(function(l){return l.fr;}).join('. ');spk(txt2,btn,.62);}
+  });
+}
+
+function renderDialogQs(){
+  var html='';
+  DIALOG_QS.forEach(function(q,i){
+    html+='<div class="mcqW">'
+      +'<div class="mcqFrQ">'+q.fr+'</div>'
+      +'<div class="mcqEnQ">'+q.en+'</div>'
+      +'<button class="bBr_ dqAud" data-idx="'+i+'" style="min-height:28px;font-size:.68rem;padding:0 10px;margin-bottom:7px">🔊 Hear question</button>';
+    if(q.type==='mcq'){
+      html+=q.opts.map(function(o,j){return '<div class="mcqO dqOpt" data-qi="'+i+'" data-oi="'+j+'" data-ans="'+q.ans+'"><div style="width:20px;height:20px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:.59rem;font-weight:800;flex-shrink:0;color:var(--mut)">'+String.fromCharCode(65+j)+'</div>'+o+'</div>';}).join('');
+    } else if(q.type==='tf'){
+      html+='<div class="mcqO dqTF" data-qi="'+i+'" data-tv="true" data-ans="'+q.cor+'">✅ Vrai / True</div>'
+        +'<div class="mcqO dqTF" data-qi="'+i+'" data-tv="false" data-ans="'+q.cor+'">❌ Faux / False</div>';
+    } else {
+      html+='<div style="font-size:.7rem;color:var(--br2);font-style:italic;margin-bottom:6px;background:var(--brb);padding:4px 9px;border-radius:6px">'+q.sc+'</div>'
+        +'<textarea class="txInp" id="dqw'+i+'" rows="2" placeholder="Écrivez ici..."></textarea>';
+    }
+    html+='<div class="mcqFb" id="dqfb'+i+'"></div></div>';
+  });
+  document.getElementById('dialogQs').innerHTML=html;
+  document.getElementById('dialogQs').addEventListener('click',function(ev){
+    var el=ev.target.closest('.dqOpt,.dqTF,.dqAud');if(!el)return;
+    if(el.classList.contains('dqAud')){spk(DIALOG_QS[el.dataset.idx].q,el);return;}
+    var qi=el.dataset.qi,ans=el.dataset.ans;
+    if(dqDone[qi]!==undefined)return;
+    if(el.classList.contains('dqOpt')){
+      var oi=parseInt(el.dataset.oi);dqDone[qi]=oi;
+      var ok=oi===parseInt(ans);
+      document.querySelectorAll('.dqOpt[data-qi="'+qi+'"]').forEach(function(e){e.classList.add('dis');if(parseInt(e.dataset.oi)===parseInt(ans))e.classList.add('co');else if(parseInt(e.dataset.oi)===oi&&!ok)e.classList.add('wo');});
+      var fb=document.getElementById('dqfb'+qi);if(fb){fb.className='mcqFb show';fb.style.cssText=ok?'background:var(--gnb);color:var(--gn)':'background:var(--rdb);color:var(--rd)';fb.innerHTML=DIALOG_QS[qi].fb;}
+      if(ok)confetti();
+    }
+    if(el.classList.contains('dqTF')){
+      var tv=el.dataset.tv==='true';var cor=el.dataset.ans==='true';dqDone[qi]=tv;
+      var ok2=tv===cor;
+      document.querySelectorAll('.dqTF[data-qi="'+qi+'"]').forEach(function(e){e.classList.add('dis');var etv=e.dataset.tv==='true';if(etv===cor)e.classList.add('co');else if(etv===tv&&!ok2)e.classList.add('wo');});
+      var fb2=document.getElementById('dqfb'+qi);if(fb2){fb2.className='mcqFb show';fb2.style.cssText=ok2?'background:var(--gnb);color:var(--gn)':'background:var(--rdb);color:var(--rd)';fb2.innerHTML=DIALOG_QS[qi].fb;}
+      if(ok2)confetti();
+    }
+  });
+}
+
+// BEST RESPONSE
+function renderBestResp(){
+  var html='';
+  BEST_RESP.forEach(function(q,i){
+    html+='<div class="brQ">'
+      +'<div class="brQlbl">Situation '+(i+1)+' / '+BEST_RESP.length+' — Quelle est la meilleure réponse ?</div>'
+      +'<div class="brQtxt">'+q.fr+'</div>'
+      +'<button class="bOut brHintBtn" data-idx="'+i+'" style="min-height:30px;font-size:.71rem;border-color:rgba(230,200,150,.4);color:rgba(230,200,150,.8);margin-bottom:6px">💡 Show context hint</button>'
+      +'<div class="brQhint" id="brhint'+i+'">'+q.hint+'</div>'
+      +'<button class="bGl_ brSpkBtn" data-idx="'+i+'" style="min-height:30px;font-size:.72rem;margin-bottom:9px">🔊 Hear situation</button>'
+      +'</div>'
+      +q.opts.map(function(o,j){return '<div class="brOpt brOptEl" data-qi="'+i+'" data-oi="'+j+'" data-ans="'+q.ans+'"><div style="width:22px;height:22px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:800;flex-shrink:0;color:var(--mut)">'+String.fromCharCode(65+j)+'</div>'+o+'</div>';}).join('')
+      +'<div class="brFb" id="brfb'+i+'"></div>'
+      +'<div style="border-top:1px solid var(--bdr2);margin:14px 0 4px"></div>';
+  });
+  document.getElementById('bestRespSection').innerHTML=html;
+  document.getElementById('bestRespSection').addEventListener('click',function(ev){
+    var el=ev.target.closest('.brOptEl,.brHintBtn,.brSpkBtn');if(!el)return;
+    var idx=el.dataset.idx;
+    if(el.classList.contains('brHintBtn')){var h=document.getElementById('brhint'+idx);if(h){h.classList.toggle('rev');el.textContent=h.classList.contains('rev')?'🇫🇷 Hide hint':'💡 Show context hint';}return;}
+    if(el.classList.contains('brSpkBtn')){spk(BEST_RESP[idx].fr,el);return;}
+    var qi=el.dataset.qi,oi=parseInt(el.dataset.oi),ans=parseInt(el.dataset.ans);
+    if(brDone[qi]!==undefined)return;
+    brDone[qi]=oi;
+    document.querySelectorAll('.brOptEl[data-qi="'+qi+'"]').forEach(function(e){e.classList.add('dis');if(parseInt(e.dataset.oi)===ans)e.classList.add('co');else if(parseInt(e.dataset.oi)===oi&&oi!==ans)e.classList.add('wo');});
+    var fb=document.getElementById('brfb'+qi);if(fb){fb.className='brFb show';fb.style.cssText=oi===ans?'background:var(--gnb);color:var(--gn)':'background:var(--rdb);color:var(--rd)';fb.textContent=BEST_RESP[qi].fb;}
+    if(oi===ans){confetti();brSc++;var sc=document.getElementById('brScoreN');if(sc)sc.textContent=brSc+'/'+BEST_RESP.length;}
+  });
+}
+
+// SIMULATOR
+function updateSim(){
+  var q=SIM_QS[simIdx];
+  document.getElementById('simQNum').textContent='Question '+(simIdx+1)+' / '+SIM_QS.length;
+  document.getElementById('simPct').textContent=Math.round((simIdx/SIM_QS.length)*100)+'%';
+  document.getElementById('simQTxt').textContent=q.q;
+  document.getElementById('simHint').textContent='Hint: '+q.hint;
+  document.getElementById('simHint').style.display='none';
+  document.getElementById('simModel').textContent='Model: '+q.model;
+  document.getElementById('simModel').style.display='none';
+  document.getElementById('simAns').value='';
+  document.getElementById('simFb').style.display='none';
+  document.getElementById('simCoach').classList.remove('show');
+  document.getElementById('sttBox').style.display='none';
+  document.getElementById('sttLive').textContent='—';
+}
+
+async function submitSim(){
+  var ans=document.getElementById('simAns').value.trim()||document.getElementById('sttLive').textContent.trim();
+  if(!ans||ans==='—'){showCoach('Speak or type your answer first!',3000);return;}
+  simAnswers[simIdx]=ans;
+  var fb=document.getElementById('simFb');fb.style.cssText='display:block;background:var(--gnb);color:var(--gn)';fb.textContent='Answer saved! Getting feedback...';
+  var c=document.getElementById('simCoach');var ct=document.getElementById('simCoachTxt');
+  c.classList.add('show');ct.innerHTML='<div class="cfbLoad">👩🏾‍🏫 Coach Linda reviewing your French...</div>';
+  try{
+    var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:AM,max_tokens:260,messages:[{role:'user',content:'You are Coach Linda, warm French coach, A0-A1. Train station context. Question: "'+SIM_QS[simIdx].q+'". Student answered: "'+ans+'". Give warm Socratic feedback (3-4 sentences). Check: vocabulary used correctly, verb forms, numbers if mentioned. Guide errors gently. Model: "'+SIM_QS[simIdx].model+'". Keep language natural. English.'}]})});
+    var d=await r.json();ct.innerHTML='<p>'+(d.content&&d.content[0]?d.content[0].text:'Great effort!')+'</p>';
+  }catch(e){ct.innerHTML='<p>Model answer: '+SIM_QS[simIdx].model+'</p>';}
+}
+
+// A1 EXTRACT
+function renderExtractQs(){
+  var html='';
+  EXTRACT_QS.forEach(function(q,i){
+    html+='<div class="mcqW"><div class="mcqFrQ">'+q.fr+'</div><div class="mcqEnQ">'+q.en+'</div>'
+      +'<button class="bBr_ exQAud" data-idx="'+i+'" style="min-height:28px;font-size:.68rem;padding:0 10px;margin-bottom:7px">🔊 Hear question</button>'
+      +q.opts.map(function(o,j){return '<div class="mcqO exQOpt" data-qi="'+i+'" data-oi="'+j+'" data-ans="'+q.ans+'"><div style="width:20px;height:20px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:.59rem;font-weight:800;flex-shrink:0;color:var(--mut)">'+String.fromCharCode(65+j)+'</div>'+o+'</div>';}).join('')
+      +'<div class="mcqFb" id="exfb'+i+'"></div></div>';
+  });
+  document.getElementById('extractQs').innerHTML=html;
+  document.getElementById('extractQs').addEventListener('click',function(ev){
+    var el=ev.target.closest('.exQOpt,.exQAud');if(!el)return;
+    if(el.classList.contains('exQAud')){spk(EXTRACT_QS[el.dataset.idx].q,el);return;}
+    var qi=el.dataset.qi,oi=parseInt(el.dataset.oi),ans=parseInt(el.dataset.ans);
+    if(extractDone[qi]!==undefined)return;
+    extractDone[qi]=oi;
+    document.querySelectorAll('.exQOpt[data-qi="'+qi+'"]').forEach(function(e){e.classList.add('dis');if(parseInt(e.dataset.oi)===ans)e.classList.add('co');else if(parseInt(e.dataset.oi)===oi&&oi!==ans)e.classList.add('wo');});
+    var fb=document.getElementById('exfb'+qi);if(fb){fb.className='mcqFb show';fb.style.cssText=oi===ans?'background:var(--gnb);color:var(--gn)':'background:var(--rdb);color:var(--rd)';fb.innerHTML=EXTRACT_QS[qi].fb;}
+    if(oi===ans)confetti();
+  });
+}
+
+// FINAL QUIZ
+function renderFinalQuiz(){
+  var html='';
+  FINAL_QS.forEach(function(q,i){
+    html+='<div class="mcqW"><div style="font-size:.59rem;font-weight:700;color:var(--br2);text-transform:uppercase;margin-bottom:6px;font-family:Cinzel,serif">Q'+(i+1)+'</div>'
+      +'<div class="mcqQ">'+q.q+'</div>'
+      +q.opts.map(function(o,j){return '<div class="mcqO fqOpt" data-qi="'+i+'" data-oi="'+j+'" data-ans="'+q.ans+'"><div style="width:20px;height:20px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:.59rem;font-weight:800;flex-shrink:0;color:var(--mut)">'+String.fromCharCode(65+j)+'</div>'+o+'</div>';}).join('')
+      +'<div class="mcqFb" id="fqfb'+i+'"></div></div>';
+  });
+  document.getElementById('finalQuiz').innerHTML=html;
+  document.getElementById('finalQuiz').addEventListener('click',function(ev){
+    var el=ev.target.closest('.fqOpt');if(!el)return;
+    var qi=el.dataset.qi,oi=parseInt(el.dataset.oi),ans=parseInt(el.dataset.ans);
+    if(quizDone[qi]!==undefined)return;
+    quizDone[qi]=oi;var ok=oi===ans;
+    document.querySelectorAll('.fqOpt[data-qi="'+qi+'"]').forEach(function(e){e.classList.add('dis');if(parseInt(e.dataset.oi)===ans)e.classList.add('co');else if(parseInt(e.dataset.oi)===oi&&!ok)e.classList.add('wo');});
+    var fb=document.getElementById('fqfb'+qi);if(fb){fb.className='mcqFb show';fb.style.cssText=ok?'background:var(--gnb);color:var(--gn)':'background:var(--rdb);color:var(--rd)';fb.textContent=ok?'Correct!':'Review vocabulary and numbers.';}
+    if(ok)confetti();
+  });
+}
+
+function renderRefl(){
+  var qs=[
+    {id:'r1',q:'Which number (70-200) was hardest for you today and why?',ph:'The hardest was... because...'},
+    {id:'r2',q:'Write one sentence in French about a train journey using a number.',ph:'Le train part voie... / Le billet coûte... euros.'},
+    {id:'r3',q:'How will announcements vocabulary help your TEF/TCF Canada score?',ph:'This will help because...'}
+  ];
+  document.getElementById('reflQs').innerHTML=qs.map(function(q){return '<div style="background:var(--bg3);border:1.5px solid var(--bdr2);border-radius:var(--r);padding:12px;margin-bottom:10px"><div style="font-size:.82rem;font-weight:700;color:var(--txt);margin-bottom:6px;line-height:1.5">'+q.q+' <span style="font-size:.69rem;color:var(--mut);font-weight:400">(optional)</span></div><textarea class="txInp" id="'+q.id+'" rows="2" placeholder="'+q.ph+'"></textarea></div>';}).join('');
+}
+
+function renderStarters(){
+  document.getElementById('starterChips').innerHTML=FREE_STARTERS.map(function(s){return '<div class="starterC starterEl">'+s+'</div>';}).join('');
+  document.getElementById('starterChips').addEventListener('click',function(ev){
+    var el=ev.target.closest('.starterEl');if(!el)return;
+    var ta=document.getElementById('freeTA');if(ta){ta.value+=(ta.value&&!ta.value.endsWith('\n')?'\n':'')+el.textContent+' ';ta.focus();updateFreeWC();}
+  });
+}
+
+function updateFreeWC(){var t=document.getElementById('freeTA').value.trim();document.getElementById('freeWC').textContent=(t?t.split(/\s+/).filter(function(w){return w.length>0;}).length:0)+' words';}
+
+async function checkFreeWriting(){
+  var txt=document.getElementById('freeTA').value.trim();
+  var wc=txt.split(/\s+/).filter(function(w){return w.length>0;}).length;
+  if(wc<20){showCoach('Write at least 7 sentences before getting feedback!',4000);return;}
+  var c=document.getElementById('freeCoach');var ct=document.getElementById('freeCoachTxt');
+  c.classList.add('show');ct.innerHTML='<div class="cfbLoad">👩🏾‍🏫 Coach Linda reading your train journey story...</div>';
+  document.getElementById('freeSSW').textContent=txt;document.getElementById('freeSS').classList.add('show');
+  try{
+    var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:AM,max_tokens:400,messages:[{role:'user',content:'Coach Linda reviewing A0-A1 French student train station writing ('+wc+' words): "'+txt+'". Check: (1) train station vocabulary used correctly (2) numbers written correctly in French words (3) verb forms (4) accent marks. Give Socratic feedback: praise specifically, identify 2-3 errors with gentle guided corrections showing the correct form AND explaining why. TEF score comment out of 5. Keep language natural. Max 6 sentences. English.'}]})});
+    var d=await r.json();ct.innerHTML='<p>'+(d.content&&d.content[0]?d.content[0].text:'Great writing!')+'</p>';confetti();
+  }catch(e){ct.innerHTML='<p>Check: Are your numbers written correctly (quatre-vingt-deux not 82)? Are train station words used accurately? Any missing accents on é, è, à?</p>';}
+}
+
+// NUM EXERCISES
+function checkNumEx(){
+  var anss=["quatre-vingt-deux","soixante-quinze","vingt","quatre-vingt-dix-sept","cent"];
+  var ok=0;
+  anss.forEach(function(ans,i){
+    var inp=document.getElementById('nex'+i);if(!inp)return;
+    var v=inp.value.trim().toLowerCase().replace(/-/g,' ');
+    var a=ans.replace(/-/g,' ');
+    var good=v===a||v.includes(a.split(' ')[0]);
+    inp.classList.toggle('ok',good);inp.classList.toggle('bad',!good);
+    if(good)ok++;
+  });
+  var pct=Math.round((ok/anss.length)*100);
+  var fb=document.getElementById('numFb');fb.style.display='block';
+  fb.style.cssText=pct>=60?'background:var(--gnb);color:var(--gn)':'background:var(--rdb);color:var(--rd)';
+  fb.innerHTML=ok+'/'+anss.length+' correct. '+( pct===100?'🎉 All numbers perfect!':'Answers: <em>quatre-vingt-deux, soixante-quinze, vingt, quatre-vingt-dix-sept, cent</em>');
+  if(pct===100)confetti();
+}
+
+// VQ QUIZ CHECK
+function checkVQ(){var anss=[1,0,2,1,2,1];var tot=Object.keys(vqDone).filter(function(i){return vqDone[i]===anss[i];}).length;document.getElementById('vqScoreN').textContent=tot+'/6';document.getElementById('vqScore').classList.add('show');showCoach(tot>=4?'Great vocabulary!':'Review the vocab cards.',4000);if(tot>=5)confetti();}
+function resetVQ(){vqDone={};renderVocabQuiz();document.getElementById('vqScore').classList.remove('show');}
+
+// AQ CHECK
+function checkAQ(){var anss=[1,2,1,2,1,3];var tot=Object.keys(aqDone).filter(function(i){return aqDone[i]===anss[i];}).length;aqSc=Math.round((tot/ANNOUNCE_QS.length)*100);document.getElementById('aqScoreN').textContent=tot+'/'+ANNOUNCE_QS.length;document.getElementById('aqScore').classList.add('show');showCoach('Announcement comprehension: '+aqSc+'%!',4000);if(aqSc>=80)confetti();}
+function resetAQ(){aqDone={};renderAnnounceQs();document.getElementById('aqScore').classList.remove('show');}
+
+// DQ CHECK
+function checkDQ(){
+  var anss=[2,2,1,'false',2,1,2,'composter','true'];
+  var tot=0;
+  DIALOG_QS.forEach(function(q,i){
+    if(q.type==='write'){var v=(document.getElementById('dqw'+i)&&document.getElementById('dqw'+i).value||'').toLowerCase();var ok=v.includes(q.ans);var fb=document.getElementById('dqfb'+i);if(fb){fb.className='mcqFb show';fb.style.cssText=ok?'background:var(--gnb);color:var(--gn)':'background:var(--rdb);color:var(--rd)';fb.textContent=ok?'Key word found!':'Include: '+q.ans;}if(ok)tot++;}
+    else if(dqDone[i]!==undefined){var expected=q.type==='mcq'?anss[i]:(anss[i]==='true');var got=q.type==='mcq'?dqDone[i]:dqDone[i];if(String(got)===String(expected))tot++;}
+  });
+  dqSc=Math.round((tot/DIALOG_QS.length)*100);
+  document.getElementById('dqScoreN').textContent=tot+'/'+DIALOG_QS.length;
+  document.getElementById('dqScore').classList.add('show');
+  if(dqSc<65){document.getElementById('gate4').classList.add('show');showCoach('Below 65% — listen again and focus on key details!',5000);}
+  else{showCoach('Dialogue comprehension: '+dqSc+'%! Excellent!',4000);if(dqSc>=80)confetti();}
+}
+function resetDQ(){dqDone={};renderDialogQs();document.getElementById('dqScore').classList.remove('show');document.getElementById('gate4').classList.remove('show');}
+
+// EXTRACT CHECK
+function checkExtract(){
+  var tot=Object.keys(extractDone).filter(function(i){return extractDone[i]===EXTRACT_QS[i].ans;}).length;
+  extractSc=Math.round((tot/EXTRACT_QS.length)*100);
+  document.getElementById('extractScoreN').textContent=tot+'/'+EXTRACT_QS.length;
+  document.getElementById('extractScore').classList.add('show');
+  document.getElementById('transcriptTxt').textContent=EXTRACT_TEXT;
+  document.getElementById('transcriptBox').classList.add('show');
+  showCoach(extractSc>=80?'Excellent A1 listening! Score: '+extractSc+'%':'Keep practising — listen again then re-read the transcript.',5000);
+  if(extractSc>=80)confetti();
+}
+function resetExtract(){extractDone={};renderExtractQs();document.getElementById('extractScore').classList.remove('show');document.getElementById('transcriptBox').classList.remove('show');}
+
+// COPY TIMER
+function startCopyTimer(){
+  if(copyStarted)return;copyStarted=true;
+  document.getElementById('copyTA').disabled=false;document.getElementById('copyTA').focus();
+  document.getElementById('tcStartBtn').style.display='none';
+  copyTmr=setInterval(function(){
+    copySecs--;var m=Math.floor(copySecs/60),s=copySecs%60;
+    var td=document.getElementById('tdDisp');td.textContent=m+':'+(s<10?'0':'')+s;
+    if(copySecs<=30)td.classList.add('urgent');
+    if(copySecs<=0){clearInterval(copyTmr);document.getElementById('copyTA').disabled=true;
+      ['checkCopyBtn','readCopyBtn','copRec'].forEach(function(id){var el=document.getElementById(id);if(el)el.style.display='flex';});
+      document.getElementById('copPb').classList.add('show');
+      showCoach("Time's up! Click check to see your accuracy.",5000);}
+  },1000);
+}
+function checkCopyTask(){
+  var para=document.getElementById('copyPara').textContent;var val=document.getElementById('copyTA').value;
+  var la=para.replace(/[^a-zàâéèêëîïôùûüÿæœ '\-]/gi,'').toLowerCase();var lb=val.replace(/[^a-zàâéèêëîïôùûüÿæœ '\-]/gi,'').toLowerCase();
+  var m=0;for(var i=0;i<Math.min(la.length,lb.length);i++)if(la[i]===lb[i])m++;
+  var ratio=Math.round(m/Math.max(la.length,1)*100);
+  var miss=['é','è','à','ê','û'].filter(function(a){return para.includes(a)&&!val.includes(a);});
+  var fb=document.getElementById('copyFb');fb.style.display='block';
+  fb.style.cssText=ratio>=88?'background:var(--gnb);color:var(--gn)':'background:var(--rdb);color:var(--rd)';
+  var txt='Accuracy: '+ratio+'%. ';if(miss.length)txt+='Missing accents: <strong>'+miss.join(', ')+'</strong>. ';
+  txt+=ratio>=88?'Excellent! Your TEF writing speed is building!':'Focus on numbers written as words and accents.';
+  fb.innerHTML=txt;if(ratio>=88)confetti();
+}
+
+// COMPLETE
+function completeLesson(){
+  var tot=FINAL_QS.filter(function(q,i){return quizDone[i]===q.ans;}).length;
+  var qs=Math.round((tot/FINAL_QS.length)*100);
+  document.getElementById('quizScN').textContent=tot+'/'+FINAL_QS.length;
+  document.getElementById('quizScLbl').textContent=qs>=90?'Excellent — TEF ready!':qs>=70?'Très bien!':'Review and retry.';
+  document.getElementById('quizSc').classList.add('show');
+  if(qs<70){document.getElementById('gate7').classList.add('show');return;}
+  var fw=(document.getElementById('copyTA').value||'').split(/\s+/).filter(function(w){return w.length>0;}).length;
+  var fw2=(document.getElementById('freeTA').value||'').split(/\s+/).filter(function(w){return w.length>0;}).length;
+  document.getElementById('stWords').textContent=fw+fw2;
+  document.getElementById('stQuiz').textContent=qs+'%';
+  document.getElementById('stSpk').textContent=spkN;
+  document.getElementById('stComp').textContent=dqSc+'%';
+  document.getElementById('stMs').textContent=mS||'?';document.getElementById('stMe').textContent=mE||'?';
+  document.querySelectorAll('.sec').forEach(function(s){s.classList.remove('show');});
+  document.getElementById('compSc').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});confetti();setTimeout(confetti,900);
+  showCoach('Jour 13 complete! Bon voyage — you are TEF-ready at the gare!',12000);
+  saveAT(fw+fw2,qs);
+}
+
+async function saveAT(wc,qs){
+  var now=new Date().toISOString();
+  try{
+    await postAT(AT_L,{studentName:sN,studentEmail:sE,lessonNumber:13,lessonTopic:"A la Gare - Nombres - Annonces - TEF/TCF Canada",submissionText:(document.getElementById('r2')&&document.getElementById('r2').value||document.getElementById('freeTA').value||'').substring(0,600),wordsWritten:wc,writingScore:qs,vocabularyScore:Math.round((Object.keys(vqDone).filter(function(i){return vqDone[i]===[1,0,2,1,2,1][i];}).length/6)*100),grammarScore:qs,submittedAt:now});
+    await postAT(AT_S,{studentName:sN,studentEmail:sE,speechTranscript:'Jour13 Gare Sim: '+simAnswers.filter(Boolean).slice(0,3).join(' | ').substring(0,400),wordsSpoken:spkN*8,uniqueVocabularyCount:spkN*5,grammarComplexityLevel:'A1',grammarAccuracyScore:qs,fluencyRating:Math.min(10,spkN),confidenceRating:Math.min(10,spkN+2),submittedAt:now});
+    await postAT(AT_R,{studentName:sN,studentEmail:sE,whatFeltHardToday:(document.getElementById('r1')&&document.getElementById('r1').value)||'—',biggestWin:'Quiz:'+qs+'% Dialogues:'+dqSc+'% Extract:'+extractSc+'%',whatSurprisedYouToday:(document.getElementById('r2')&&document.getElementById('r2').value)||'—',motivationLevel:mE==='🔥'?10:mE==='😄'?8:mE==='🙂'?6:mE==='😐'?4:3,submittedAt:now});
+    showToast('Progress saved!');document.getElementById('saveCon').style.display='block';
+  }catch(e){localStorage.setItem('ffl_d13_'+sE,JSON.stringify({sN:sN,sE:sE,qs:qs,ts:now}));}
+}
+async function postAT(t,f){var r=await fetch('https://api.airtable.com/v0/'+AT_BASE+'/'+encodeURIComponent(t),{method:'POST',headers:{'Authorization':'Bearer '+AT_TOKEN,'Content-Type':'application/json'},body:JSON.stringify({fields:f})});if(!r.ok)throw new Error();return r.json();}
+
+// COACH / TOAST / CONFETTI / DICT
+function showCoach(msg,dur){document.getElementById('cbTxt').textContent=msg;document.getElementById('cb').classList.add('show');if(cTmr)clearTimeout(cTmr);if(dur>0)cTmr=setTimeout(function(){document.getElementById('cb').classList.remove('show');},dur);}
+function toggleCoach(){var msgs=["Numbers tip: quatre-vingt (80) has an S only when nothing follows — quatre-vingts (80) but quatre-vingt-deux (82)!","TEF Listening tip: In announcements, always listen for: destination, platform number, time, and any delay!","'Composter votre billet' — this is THE most famous SNCF phrase. If you don't validate, you get a fine!","Voie vs quai: voie is the track number, quai is the platform area. The announcement says voie, you go to the quai!","For numbers 70-79: think soixante + dix to nineteen. Soixante-dix = 60+10 = 70!","'En raison d\u2019un incident technique' — this means there is a technical problem. Very common in delay announcements!","The aller-retour (return ticket) vs aller simple (one-way) distinction appears in almost every TEF dialogue!","TEF Tip: In best response tasks, eliminate impossible answers first — then choose the most natural, polite option!"];document.getElementById('cb').classList.contains('show')?document.getElementById('cb').classList.remove('show'):showCoach(msgs[Math.floor(Math.random()*msgs.length)],8000);}
+function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(function(){t.style.display='none';},4000);}
+function confetti(){var box=document.getElementById('cfB');box.style.display='block';box.innerHTML='';['#6B3A2A','#C4935A','#B8920A','#1A7A50','#6B2FA0','#B53A2A','#9B5A30'].forEach(function(col){for(var i=0;i<7;i++){var cf=document.createElement('div');cf.className='cf';cf.style.cssText='left:'+Math.random()*100+'%;top:'+Math.random()*15+'%;background:'+col+';animation-delay:'+Math.random()*.8+'s;animation-duration:'+(1.5+Math.random())+'s';box.appendChild(cf);}});setTimeout(function(){box.style.display='none';box.innerHTML='';},2800);}
+function openDict(){document.getElementById('dictP').classList.add('open');setTimeout(function(){document.getElementById('dpW').focus();},280);}
+function closeDict(){document.getElementById('dictP').classList.remove('open');}
+function dpLookup(){var w=document.getElementById('dpW').value.trim();if(!w)return;var enc=encodeURIComponent(w);document.getElementById('dpLks').innerHTML='<div class="dpLk" data-url="https://context.reverso.net/translation/french-english/'+enc+'">🔍 Reverso</div><div class="dpLk" data-url="https://www.wordreference.com/fren/'+enc+'">📖 WordRef</div><div class="dpLk" data-url="https://fr.wiktionary.org/wiki/'+enc+'">📚 Wiktionnaire</div>';spk(w,null);}
+
+// MAIN SETUP
+function setupAllEvents(){
+  // Welcome
+  document.getElementById('mSRow').addEventListener('click',function(ev){var btn=ev.target.closest('.moodBtn');if(btn)selMood(btn,false);});
+  document.getElementById('wStartBtn').addEventListener('click',startLesson);
+  // Section nav
+  document.getElementById('s1Next').addEventListener('click',function(){goSec(2);});
+  document.getElementById('s2Prev').addEventListener('click',function(){goSec(1);});document.getElementById('s2Next').addEventListener('click',function(){goSec(3);});
+  document.getElementById('s3Prev').addEventListener('click',function(){goSec(2);});document.getElementById('s3Next').addEventListener('click',function(){goSec(4);});
+  document.getElementById('s4Prev').addEventListener('click',function(){goSec(3);});document.getElementById('s4Next').addEventListener('click',function(){goSec(4+1);});
+  document.getElementById('s5Prev').addEventListener('click',function(){goSec(4);});document.getElementById('s5Next').addEventListener('click',function(){goSec(6);});
+  document.getElementById('s6Prev').addEventListener('click',function(){goSec(5);});document.getElementById('s6Next').addEventListener('click',function(){goSec(7);});
+  document.getElementById('s7Prev').addEventListener('click',function(){goSec(6);});
+  // Coach avatar
+  document.getElementById('coachAv').addEventListener('click',toggleCoach);
+  // Dict
+  document.getElementById('dictFab').addEventListener('click',openDict);
+  document.getElementById('dpX').addEventListener('click',closeDict);
+  document.getElementById('dpGo').addEventListener('click',dpLookup);
+  document.getElementById('dpW').addEventListener('keydown',function(e){if(e.key==='Enter')dpLookup();});
+  document.getElementById('dpLks').addEventListener('click',function(ev){var el=ev.target.closest('.dpLk');if(el)window.open(el.dataset.url,'dict','width=960,height=640,scrollbars=yes');});
+  // Dots
+  document.getElementById('dotsW').addEventListener('click',function(ev){var el=ev.target.closest('.dot');if(el){var n=parseInt(el.id.replace('dot',''));if(n)goSec(n);}});
+  // Sec1 buttons
+  document.getElementById('hearAllVocabBtn').addEventListener('click',function(){spk(VOCAB_SPK.join(' '),this);});
+  document.getElementById('revAllVocabBtn').addEventListener('click',function(){document.querySelectorAll('.vcEn').forEach(function(el){el.classList.add('rev');});});
+  document.getElementById('vocabRepR').addEventListener('click',function(){dRec('vocabRepR','vocabRepP');});
+  document.getElementById('vocabRepP').addEventListener('click',function(){pBlob('vocabRepP');});
+  document.getElementById('checkVQBtn').addEventListener('click',checkVQ);
+  document.getElementById('resetVQBtn').addEventListener('click',resetVQ);
+  // Sec2
+  document.getElementById('checkAQBtn').addEventListener('click',checkAQ);
+  document.getElementById('resetAQBtn').addEventListener('click',resetAQ);
+  // Sec3
+  document.getElementById('hearAllNumBtn').addEventListener('click',function(){spk(NUM_SPK.join('. '),this);});
+  document.getElementById('revAllNumBtn').addEventListener('click',function(){document.querySelectorAll('.numEn').forEach(function(el){el.classList.add('rev');});});
+  document.getElementById('numRepR').addEventListener('click',function(){dRec('numRepR','numRepP');});
+  document.getElementById('numRepP').addEventListener('click',function(){pBlob('numRepP');});
+  document.getElementById('checkNumBtn').addEventListener('click',checkNumEx);
+  document.getElementById('resetNumBtn').addEventListener('click',function(){document.getElementById('numFb').style.display='none';document.querySelectorAll('.numExInp').forEach(function(inp){inp.value='';inp.className='flInp numExInp';});});
+  // Sec4
+  document.getElementById('checkDQBtn').addEventListener('click',checkDQ);
+  document.getElementById('resetDQBtn').addEventListener('click',resetDQ);
+  document.getElementById('retrydq4').addEventListener('click',resetDQ);
+  // Sec6 simulator
+  document.getElementById('simAudBtn').addEventListener('click',function(){spk(SIM_QS[simIdx].q,this);});
+  document.getElementById('simHintBtn').addEventListener('click',function(){var h=document.getElementById('simHint');h.style.display=h.style.display==='block'?'none':'block';});
+  document.getElementById('simModelBtn').addEventListener('click',function(){var m=document.getElementById('simModel');m.style.display=m.style.display==='block'?'none':'block';});
+  document.getElementById('simSttBtn').addEventListener('click',function(){startSTT('simAns','sttLive','simSttBtn');});
+  document.getElementById('simPb2').addEventListener('click',function(){pBlob('simPb2');});
+  document.getElementById('simRedoBtn').addEventListener('click',function(){document.getElementById('simAns').value='';document.getElementById('sttLive').textContent='—';document.getElementById('sttBox').style.display='none';document.getElementById('simFb').style.display='none';document.getElementById('simCoach').classList.remove('show');});
+  document.getElementById('simSubmitBtn').addEventListener('click',submitSim);
+  document.getElementById('simNextBtn').addEventListener('click',function(){if(simIdx<SIM_QS.length-1){simIdx++;updateSim();}else showCoach('All 12 questions done! Great simulator practice!',5000);});
+  document.getElementById('simPrevBtn').addEventListener('click',function(){if(simIdx>0){simIdx--;updateSim();}});
+  // Sec7 extract
+  document.getElementById('extractSpkBtn').addEventListener('click',function(){if(extractPlays>=3){showCoach('Maximum 3 plays — just like the real TEF!',3000);return;}extractPlays++;document.getElementById('extractPlays').textContent='Plays: '+extractPlays+'/3';spk(EXTRACT_TEXT,this,.80);});
+  document.getElementById('extractSlowBtn').addEventListener('click',function(){spk(EXTRACT_TEXT,this,.62);});
+  document.getElementById('extractRecBtn').addEventListener('click',function(){dRec('extractRecBtn','extractPbBtn');});
+  document.getElementById('extractPbBtn').addEventListener('click',function(){pBlob('extractPbBtn');});
+  document.getElementById('submitExtractBtn').addEventListener('click',checkExtract);
+  document.getElementById('resetExtractBtn').addEventListener('click',resetExtract);
+  // Copy
+  document.getElementById('copySpkBtn').addEventListener('click',function(){spk(document.getElementById('copyPara').textContent,this);});
+  document.getElementById('copySlowBtn').addEventListener('click',function(){spk(document.getElementById('copyPara').textContent,this,.62);});
+  document.getElementById('tcStartBtn').addEventListener('click',startCopyTimer);
+  document.getElementById('copyTA').addEventListener('input',function(){var t=this.value.trim();document.getElementById('copyWC').textContent=(t?t.split(/\s+/).filter(function(w){return w.length>0;}).length:0)+' words';});
+  document.getElementById('checkCopyBtn').addEventListener('click',checkCopyTask);
+  document.getElementById('readCopyBtn').addEventListener('click',function(){spk(document.getElementById('copyTA').value,this);});
+  document.getElementById('copRec').addEventListener('click',function(){dRec('copRec','copPb');});
+  document.getElementById('copPb').addEventListener('click',function(){pBlob('copPb');});
+  // Free
+  document.getElementById('checkFreeBtn').addEventListener('click',checkFreeWriting);
+  document.getElementById('freeSpkBtn').addEventListener('click',function(){spk(document.getElementById('freeTA').value,this);});
+  document.getElementById('freeRecBtn').addEventListener('click',function(){dRec('freeRecBtn','freePbBtn');});
+  document.getElementById('freePbBtn').addEventListener('click',function(){pBlob('freePbBtn');});
+  document.getElementById('freeClearBtn').addEventListener('click',function(){document.getElementById('freeTA').value='';document.getElementById('freeWC').textContent='0 words';document.getElementById('freeCoach').classList.remove('show');});
+  document.getElementById('freeTA').addEventListener('input',updateFreeWC);
+  // Final
+  document.getElementById('completeBtn').addEventListener('click',completeLesson);
+  document.getElementById('retryQuiz').addEventListener('click',function(){quizDone={};renderFinalQuiz();document.getElementById('quizSc').classList.remove('show');document.getElementById('gate7').classList.remove('show');});
+  // End mood
+  document.getElementById('mERow').addEventListener('click',function(ev){var btn=ev.target.closest('.moodBtn');if(btn)selMood(btn,true);});
+}
+
+function startLesson(){
+  var n=document.getElementById('wName').value.trim();var e=document.getElementById('wEmail').value.trim();
+  var ok=true;
+  if(!n){document.getElementById('wName').classList.add('werr');document.getElementById('wNE').style.display='block';ok=false;}else{document.getElementById('wName').classList.remove('werr');document.getElementById('wNE').style.display='none';}
+  if(!e||!e.includes('@')){document.getElementById('wEmail').classList.add('werr');document.getElementById('wEE').style.display='block';ok=false;}else{document.getElementById('wEmail').classList.remove('werr');document.getElementById('wEE').style.display='none';}
+  if(!ok)return;
+  sN=n;sE=e;
+  document.getElementById('wModal').style.display='none';
+  document.getElementById('dictFab').style.display='flex';
+  try{buildUI();}catch(err){console.warn('BuildUI error:',err);}
+  showCoach('Bienvenue '+sN.split(' ')[0]+'! Jour 13 — bienvenue à la gare! Let\'s go!',8000);
+}
+
+function buildUI(){
+  buildDots();buildPS();
+  renderVocab();renderChunks();renderVocabQuiz();
+  renderAnnouncements();renderAnnounceQs();
+  renderNumbers();renderNumEx();renderNumDict();
+  renderDialogues();renderDialogQs();
+  renderBestResp();
+  updateSim();
+  renderExtractQs();
+  renderStarters();renderFinalQuiz();renderRefl();
+  updProg();
+}
+
+document.addEventListener('DOMContentLoaded',function(){setupAllEvents();});
+</script></body></html>
